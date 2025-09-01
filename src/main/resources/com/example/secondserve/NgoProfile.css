@@ -1,0 +1,70 @@
+/* Inherit base styles if this is part of a larger app */
+.content-title { -fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #343a40; }
+.content-subtitle { -fx-font-size: 16px; -fx-text-fill: #6c757d; -fx-padding: 0 0 20px 0; }
+
+.profile-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 30px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #dee2e6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+}
+
+.profile-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+}
+
+.profile-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #212529;
+}
+
+/* --- Input Fields --- */
+.text-field {
+    -fx-font-size: 14px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px 12px;
+}
+
+.text-field:focused {
+    -fx-border-color: #8e44ad; /* Use your app's accent color */
+    -fx-background-color: #ffffff;
+    -fx-border-width: 2px;
+}
+
+.text-field:disabled {
+    -fx-opacity: 0.7;
+}
+
+
+/* --- Buttons --- */
+.edit-button, .cancel-button, .save-button {
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.edit-button, .cancel-button {
+    -fx-background-color: #f1f3f5;
+    -fx-text-fill: #343a40;
+}
+
+.edit-button:hover, .cancel-button:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.save-button {
+    -fx-background-color: #8e44ad; /* Your primary accent color */
+    -fx-text-fill: white;
+}
+
+.save-button:hover {
+    -fx-background-color: #7d3c98;
+}

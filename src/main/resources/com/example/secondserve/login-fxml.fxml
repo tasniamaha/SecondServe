@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane stylesheets="@login.css" styleClass="root" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.LoginController">
+
+    <!-- ScrollPane for responsiveness -->
+    <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+
+        <VBox alignment="CENTER" spacing="30.0" styleClass="vbox">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+
+            <!-- Header Section with Logo and Title -->
+            <HBox alignment="CENTER" spacing="20.0">
+                <StackPane styleClass="main-logo-container">
+                    <ImageView fx:id="logoImageView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                </StackPane>
+                <Label styleClass="app-title" text="SecondServe">
+                    <font>
+                        <Font name="System Bold" size="48.0" />
+                    </font>
+                </Label>
+            </HBox>
+
+            <!-- Role Label -->
+            <Label fx:id="roleName" styleClass="role-label" text="Login as Hotel Manager" />
+
+            <!-- Separator -->
+            <Separator styleClass="separator" />
+
+            <!-- Sign In Form Container -->
+            <VBox alignment="TOP_LEFT" spacing="25.0" styleClass="form-container">
+
+                <!-- Form Header with Back Button and Title -->
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <Button fx:id="backButton" mnemonicParsing="false" styleClass="back-button" text="←" onAction="#handleBackButton"/>
+                    <Label styleClass="form-title" text="Sign In" />
+                    <!-- Spacer to push title towards center -->
+                    <Region HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <!-- Email Field Section -->
+                <VBox spacing="8.0">
+                    <Label styleClass="input-label" text="Email" />
+                    <TextField fx:id="emailField" maxWidth="Infinity" promptText="Enter your email" styleClass="text-field" />
+                </VBox>
+
+                <!-- Password Field Section -->
+                <VBox spacing="8.0">
+                    <Label styleClass="input-label" text="Password" />
+                    <PasswordField fx:id="passwordField" maxWidth="Infinity" promptText="Enter your password" styleClass="password-field" />
+                </VBox>
+
+                <!-- Sign In Button -->
+                <Button fx:id="loginButton" maxWidth="Infinity" mnemonicParsing="false" styleClass="login-button" text="Sign In" />
+
+                <!-- Sign Up Link Section -->
+                <HBox alignment="CENTER" spacing="8.0">
+                    <Label styleClass="link-text" text="Don't have an account?" />
+                    <Hyperlink fx:id="signUpLink" styleClass="hyperlink" text="Sign up" onAction="#handleSignUp"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</StackPane>

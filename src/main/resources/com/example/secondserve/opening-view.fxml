@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="10.0" styleClass="root" stylesheets="@opening-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.RoleSelectionController">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+
+    <!-- ==================== MODIFIED: Header Section ==================== -->
+    <HBox alignment="CENTER" spacing="15.0">
+        <StackPane styleClass="main-logo-container">
+            <ImageView fx:id="logoImageView" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+        </StackPane>
+        <Label styleClass="app-title" text="SecondServe">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Label>
+    </HBox>
+    <!-- ================================================================= -->
+
+    <Label styleClass="header-title" text="Hotel Food Waste Management System" />
+    <Label styleClass="header-subtitle" text="Choose your role to get started" />
+
+    <!-- Roles Section -->
+    <HBox alignment="CENTER" spacing="30.0" >
+        <padding>
+            <Insets bottom="30.0" top="30.0" />
+        </padding>
+
+        <!-- Kitchen Staff Card -->
+        <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="role-card">
+            <StackPane styleClass="icon-container, kitchen-icon-border">
+                <!-- MODIFIED: Increased icon size -->
+                <ImageView fx:id="kitchenStaffIcon" fitHeight="70.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
+            </StackPane>
+            <Label styleClass="role-title" text="Kitchen Staff" />
+            <Label alignment="CENTER" styleClass="role-description" text="Log leftover food and ingredients, get preservation tips" textAlignment="CENTER" wrapText="true" />
+            <Button onAction="#handleKitchenStaff" styleClass="green-button" text="Continue as Kitchen Staff" />
+        </VBox>
+
+        <!-- Hotel Manager Card -->
+        <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="role-card">
+            <StackPane styleClass="icon-container, manager-icon-border">
+                <!-- MODIFIED: Increased icon size -->
+                <ImageView fx:id="hotelManagerIcon" fitHeight="73.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true" />
+            </StackPane>
+            <Label styleClass="role-title" text="Hotel Manager" />
+            <Label alignment="CENTER" styleClass="role-description" text="Monitor waste analytics and manage donation requests" textAlignment="CENTER" wrapText="true" />
+            <Button onAction="#handleHotelManager" styleClass="blue-button" text="Continue as Hotel Manager" />
+        </VBox>
+
+        <!-- NGO Representative Card -->
+        <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="role-card">
+            <StackPane styleClass="icon-container, ngo-icon-border">
+                <!-- MODIFIED: Increased icon size -->
+                <ImageView fx:id="ngoIcon" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />
+            </StackPane>
+            <Label styleClass="role-title" text="NGO Representative" />
+            <Label alignment="CENTER" styleClass="role-description" text="Browse and request food donations from hotels" textAlignment="CENTER" wrapText="true" />
+            <Button onAction="#handleNgoRepresentative" styleClass="purple-button" text="Continue as NGO Representative" />
+        </VBox>
+    </HBox>
+
+    <!-- Footer Section -->
+    <Label styleClass="footer-text" text="Reducing food waste through smart management and community collaboration" />
+</VBox>

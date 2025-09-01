@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root" stylesheets="@KitchenStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.KitchenMainController">
+
+    <!-- TOP: Header Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="header-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+            </padding>
+            <ImageView fx:id="logoImageView" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+            <Label styleClass="app-title" text="Kitchen Interface">
+                <HBox.margin>
+                    <Insets left="10.0" />
+                </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label styleClass="hotel-name" text="grand plaza hotel" />
+            <Button mnemonicParsing="false" styleClass="logout-button" text="log out">
+                <HBox.margin>
+                    <Insets left="15.0" />
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- LEFT: Sidebar Navigation -->
+    <left>
+        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20.0" />
+            </padding>
+            <Button fx:id="logLeftoversButton" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#showLogLeftoversView" styleClass="nav-button, active" text="Log Leftovers" />
+        </VBox>
+    </left>
+
+    <!-- CENTER: Main Content Area -->
+    <center>
+        <StackPane>
+            <VBox styleClass="main-content" BorderPane.alignment="CENTER">
+                <padding>
+                    <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+                </padding>
+                <Label styleClass="content-title" text="Log Leftover Food" />
+                <Label styleClass="content-subtitle" text="Record leftover food items and ingredients from today's service">
+                    <VBox.margin>
+                        <Insets bottom="20.0" />
+                    </VBox.margin>
+                </Label>
+
+                <!-- Form Container -->
+                <VBox styleClass="form-container">
+                    <padding>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                    </padding>
+
+                    <!-- Food Item and Quantity Row -->
+                    <HBox spacing="20.0">
+                        <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                            <Label styleClass="input-label" text="Food Item" />
+                            <TextField fx:id="foodItemField" promptText="e.g., Grilled Chicken" styleClass="text-field" />
+                        </VBox>
+                        <VBox prefWidth="200" spacing="5.0">
+                            <Label styleClass="input-label" text="Quantity (kg)" />
+                            <TextField fx:id="quantityField" promptText="0" styleClass="text-field" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Category -->
+                    <VBox spacing="5.0">
+                        <Label styleClass="input-label" text="Category" />
+                        <ComboBox fx:id="categoryComboBox" maxWidth="1.7976931348623157E308" promptText="Select category" styleClass="combo-box" />
+                        <VBox.margin>
+                            <Insets top="15.0" />
+                        </VBox.margin>
+                    </VBox>
+
+                    <!-- Condition -->
+                    <VBox spacing="5.0">
+                        <Label styleClass="input-label" text="Condition" />
+                        <ComboBox fx:id="conditionComboBox" maxWidth="1.7976931348623157E308" promptText="Select condition" styleClass="combo-box" />
+                        <VBox.margin>
+                            <Insets top="15.0" />
+                        </VBox.margin>
+                    </VBox>
+
+                    <!-- Notes -->
+                    <VBox spacing="5.0">
+                        <Label styleClass="input-label" text="Notes (Optional)" />
+                        <TextArea fx:id="notesArea" prefRowCount="4" promptText="Additional notes about the item..." styleClass="text-area" wrapText="true" />
+                        <VBox.margin>
+                            <Insets top="15.0" />
+                        </VBox.margin>
+                    </VBox>
+
+                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" text="Log Leftover Item">
+                        <VBox.margin>
+                            <Insets top="30.0" />
+                        </VBox.margin>
+                    </Button>
+                    <Label styleClass="section-title" text="Today's Logged Items">
+                        <VBox.margin>
+                            <Insets bottom="10.0" top="40.0" />
+                        </VBox.margin>
+                    </Label>
+
+                    <!-- Container for the list. Initially shows placeholder. -->
+                    <!-- In your controller, you would clear this VBox's children and add actual item cards. -->
+                    <VBox fx:id="todaysItemsContainer" alignment="CENTER" styleClass="logged-items-container">
+                        <children>
+                            <Label styleClass="placeholder-text" text="No items logged today." />
+                        </children>
+                    </VBox>
+                </VBox>
+            </VBox>
+            <VBox fx:id="preservationTipsView" managed="false" styleClass="main-content" visible="false">
+                <padding>
+                    <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+                </padding>
+
+                <!-- Header for this view -->
+                <Label styleClass="content-title" text="Preservation Tips" />
+                <Label styleClass="content-subtitle" text="Smart suggestions to extend the life of your leftover food" />
+
+                <!-- Container for all the tip cards -->
+                <VBox fx:id="tipsContainer" spacing="20.0">
+                    <VBox.margin>
+                        <Insets top="30.0" />
+                    </VBox.margin>
+                    <!-- This will be populated dynamically by the controller -->
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,251 @@
+/* Root styles */
+.root {
+    -fx-background-color: #f8f9fa;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-padding: 20px;
+}
+
+/* Main container */
+.vbox {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+    -fx-background-color: transparent;
+}
+
+/* Header section */
+.app-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c6624;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0.5, 0, 1);
+}
+
+/* Role label */
+.role-label {
+    -fx-text-fill: #4a5568 !important; /* Force dark color */
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 0;
+    -fx-effect: null; /* Remove any effects that might make it hard to see */
+}
+.vbox .role-label {
+    -fx-text-fill: #4a5568 !important;
+}
+.label.role-label {
+    -fx-text-fill: #4a5568 !important;
+}
+/* Separator */
+.separator {
+    -fx-background-color: #e2e8f0;
+    -fx-padding: 0;
+}
+
+/* Form container */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-max-width: 400px;
+    -fx-min-width: 300px;
+}
+
+/* Form title section */
+.form-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+/* Enhanced Back button */
+.back-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #1c6624;
+    -fx-font-size: 24px;
+    -fx-font-weight: 900;
+    -fx-padding: 0 10px 0 0;
+    -fx-cursor: hand;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-font-family: "Arial Black", "Segoe UI Black", sans-serif;
+}
+
+.back-button:hover {
+    -fx-text-fill: #14461b;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.back-button:pressed {
+    -fx-text-fill: #0d3012;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* Input labels */
+.input-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+/* Text fields */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e0;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40px;
+}
+
+.text-field:focused {
+    -fx-border-color: #1c6624;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(28, 102, 36, 0.2), 5, 0, 0, 1);
+}
+
+.text-field:hover {
+    -fx-border-color: #a0aec0;
+}
+
+/* Password field */
+.password-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cbd5e0;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40px;
+}
+
+.password-field:focused {
+    -fx-border-color: #1c6624;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(28, 102, 36, 0.2), 5, 0, 0, 1);
+}
+
+.password-field:hover {
+    -fx-border-color: #a0aec0;
+}
+
+/* Login button */
+.login-button {
+    -fx-background-color: #1c6624;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-padding: 12px;
+    -fx-cursor: hand;
+    -fx-pref-height: 45px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.login-button:hover {
+    -fx-background-color: #14461b;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.login-button:pressed {
+    -fx-background-color: #0d3012;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+    -fx-translate-y: 1px;
+}
+
+.login-button:disabled {
+    -fx-background-color: #a0aec0;
+    -fx-cursor: default;
+}
+
+/* Hyperlink */
+.hyperlink {
+    -fx-text-fill: #1c6624;
+    -fx-border-color: transparent;
+    -fx-underline: false;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #14461b;
+    -fx-underline: true;
+}
+
+.hyperlink:pressed {
+    -fx-text-fill: #0d3012;
+}
+
+/* Link text */
+.link-text {
+    -fx-text-fill: #718096;
+    -fx-font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .root {
+        -fx-padding: 10px;
+    }
+
+    .form-container {
+        -fx-padding: 20px;
+        -fx-max-width: 100%;
+    }
+
+    .app-title {
+        -fx-font-size: 20px;
+    }
+
+    .form-title {
+        -fx-font-size: 18px;
+    }
+
+    .role-label {
+        -fx-font-size: 14px;
+    }
+
+    .back-button {
+        -fx-font-size: 20px;
+        -fx-min-width: 35px;
+        -fx-min-height: 35px;
+    }
+
+    .text-field, .password-field {
+        -fx-pref-height: 35px;
+        -fx-font-size: 13px;
+    }
+
+    .login-button {
+        -fx-pref-height: 40px;
+        -fx-font-size: 14px;
+    }
+}
+
+/* Focus visual effects */
+*:focused {
+    -fx-focus-color: #1c6624;
+    -fx-faint-focus-color: #1c662422;
+}
+
+/* Animation for button hover */
+.login-button, .back-button, .hyperlink {
+    -fx-transition: all 0.2s ease;
+}
+
+/* Error state for inputs */
+.text-field:error, .password-field:error {
+    -fx-border-color: #e53e3e;
+    -fx-border-width: 2px;
+}
+
+.text-field:error:focused, .password-field:error:focused {
+    -fx-effect: dropshadow(gaussian, rgba(229, 62, 62, 0.2), 5, 0, 0, 1);
+}

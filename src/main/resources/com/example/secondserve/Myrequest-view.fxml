@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox styleClass="main-content" stylesheets="@NgoPortal.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.MyRequestsController">
+    <padding>
+        <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+    </padding>
+
+    <!-- Page Header -->
+    <Label styleClass="content-title" text="My Requests" />
+    <Label styleClass="content-subtitle" text="Track the status of all your food donation requests" />
+
+    <!-- Spacer -->
+    <VBox spacing="20.0">
+        <VBox.margin>
+            <Insets top="20.0" />
+        </VBox.margin>
+
+        <!-- The TableView is the core component for displaying the requests -->
+        <TableView fx:id="requestsTableView" styleClass="table-view" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="hotelNameColumn" text="Hotel Name" prefWidth="250.0" />
+                <TableColumn fx:id="foodItemColumn" text="Food Item" prefWidth="200.0" />
+                <TableColumn fx:id="dateColumn" text="Date Requested" prefWidth="150.0" />
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="120.0" />
+            </columns>
+
+            <placeholder>
+                <Label styleClass="placeholder-text" text="You have not made any donation requests yet." />
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

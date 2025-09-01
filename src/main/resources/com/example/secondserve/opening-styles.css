@@ -1,0 +1,144 @@
+/* Root styling */
+.root {
+    -fx-background-color: #f8fafc;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+/* Header styling */
+.header-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #64748b;
+    -fx-padding: 0 0 8 0;
+}
+
+.header-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #94a3b8;
+    -fx-padding: 0 0 20 0;
+}
+
+/* --- MODIFIED: Role card styling --- */
+.role-card {
+    -fx-background-color: white;
+    -fx-background-radius: 24px; /* Increased for rounder corners */
+    -fx-border-color: #e2e8f0;   /* Light gray border for all cards */
+    -fx-border-width: 1px;
+    -fx-border-radius: 24px;
+    -fx-effect: dropshadow(gaussian, #0000001a, 10, 0.0, 0, 4);
+    -fx-padding: 32 24 24 24;
+    -fx-pref-width: 280px;
+    -fx-min-width: 280px;
+    -fx-max-width: 280px;
+
+    -fx-spacing: 16px;
+}
+
+.role-card:hover {
+    -fx-effect: dropshadow(gaussian, #00000025, 15, 0.0, 0, 6);
+    -fx-border-color: #cbd5e1;
+    -fx-cursor: hand;
+}
+
+/* --- NEW: Icon container styling --- */
+.icon-container {
+    -fx-pref-width: 64px;
+    -fx-pref-height: 64px;
+    -fx-min-width: 64px;
+    -fx-min-height: 64px;
+    -fx-max-width: 64px;
+    -fx-max-height: 64px;
+    -fx-background-radius: 32px; /* Half of the size to make it a circle */
+    -fx-alignment: center;
+}
+
+/* --- NEW: Icon background colors --- */
+.kitchen-icon-bg {
+    -fx-background-color: #22c55e;
+}
+
+.manager-icon-bg {
+    -fx-background-color: #3b82f6;
+}
+
+.ngo-icon-bg {
+    -fx-background-color: #a855f7;
+}
+
+
+/* Role title styling */
+.role-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1e293b;
+    -fx-padding: 8 0 0 0;
+}
+
+/* Role description styling */
+.role-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748b;
+    -fx-line-spacing: 2px;
+    -fx-padding: 0 0 16 0;
+}
+
+/* --- MODIFIED: Button styling with increased width --- */
+.green-button, .blue-button, .purple-button {
+    -fx-background-radius: 50px; /* Increased for pill shape */
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: white;
+    -fx-padding: 12 20 12 20;
+    -fx-pref-width: 280px; /* CHANGED: Increased from 240px to 280px */
+    -fx-cursor: hand;
+    -fx-border-radius: 50px; /* Increased for pill shape */
+}
+
+.green-button {
+    -fx-background-color: #22c55e;
+}
+
+.green-button:hover {
+    -fx-background-color: #16a34a;
+}
+
+.green-button:pressed {
+    -fx-background-color: #15803d;
+}
+
+.blue-button {
+    -fx-background-color: #3b82f6;
+}
+
+.blue-button:hover {
+    -fx-background-color: #2563eb;
+}
+
+.blue-button:pressed {
+    -fx-background-color: #1d4ed8;
+}
+
+.purple-button {
+    -fx-background-color: #a855f7;
+}
+
+.purple-button:hover {
+    -fx-background-color: #9333ea;
+}
+
+.purple-button:pressed {
+    -fx-background-color: #7c3aed;
+}
+
+/* Footer text styling */
+.footer-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+    -fx-padding: 20 0 0 0;
+}
+
+/* Logo and app name styling adjustments */
+.root > Label:nth-child(2) { /* FoodWise label */
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: 700;
+}

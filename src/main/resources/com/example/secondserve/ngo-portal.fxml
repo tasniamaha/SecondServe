@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- 1. LINK THE CONTROLLER CLASS -->
+<BorderPane fx:id="mainBorderPane" prefHeight="800.0" prefWidth="1280.0" styleClass="root" stylesheets="@NgoPortal.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.NgoPortalController">
+
+    <!-- TOP: Header Bar (no changes needed here) -->
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="header-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
+            </padding>
+            <Label styleClass="app-title" text="NGO Portal">
+                <HBox.margin>
+                    <Insets left="12.0" />
+                </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="NGO_name" styleClass="user-name" text="Shohay" />
+            <Button mnemonicParsing="false" styleClass="logout-button" text="Log Out">
+                <HBox.margin>
+                    <Insets left="15.0" />
+                </HBox.margin>
+                <font>
+                    <Font name="System Bold" size="12.0" />
+                </font>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- LEFT: Sidebar Navigation -->
+    <left>
+        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="20.0" />
+            </padding>
+            <!-- 2. ADD fx:id AND onAction TO EACH BUTTON -->
+            <Button fx:id="browseHotelsButton" onAction="#showBrowseHotelsView" alignment="BASELINE_LEFT" mnemonicParsing="false" styleClass="nav-button, active" text="Browse Hotels" />
+            <Button fx:id="myRequestsButton" onAction="#showMyRequestsView" alignment="BASELINE_LEFT" mnemonicParsing="false" styleClass="nav-button" text="My Requests" />
+            <Button fx:id="ngoProfileButton" onAction="#showNgoProfileView" alignment="BASELINE_LEFT" mnemonicParsing="false" styleClass="nav-button" text="NGO Profile" />
+        </VBox>
+    </left>
+
+    <!-- CENTER: Main Content Area -->
+    <center>
+        <!-- The content inside <center> will be replaced dynamically -->
+        <VBox styleClass="main-content" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+            </padding>
+            <Label styleClass="content-title" text="Available Food Donations" />
+            <Label styleClass="content-subtitle" text="Browse hotels offering food donations in your area">
+                <VBox.margin>
+                    <Insets bottom="20.0" />
+                </VBox.margin>
+            </Label>
+            <VBox alignment="CENTER" styleClass="content-container">
+                <children>
+                    <Label styleClass="placeholder-text" text="No hotels with available food donations at this time." />
+                </children>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
