@@ -29,14 +29,14 @@
          <graphic>
             <ImageView fitHeight="27.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Menu_logo.png" />
+                  <Image url="@../../../assets/Menu_logo.png" />
                </image>
             </ImageView>
          </graphic>
       </Label>
       <ImageView fitHeight="36.0" fitWidth="39.0" layoutX="238.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../a75df708-9059-4fb9-8c23-7758754849b7.jpeg" />
+            <Image url="@../../../assets/SecondServe_logo.png" />
          </image>
       </ImageView>
       <Label layoutX="238.0" layoutY="89.0" text="Waste amount">
@@ -46,7 +46,7 @@
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Dustbin.png" />
+                  <Image url="@../../../assets/Dustbin.png" />
                </image>
             </ImageView>
          </graphic>
@@ -68,7 +68,7 @@
          <graphic>
             <ImageView fitHeight="33.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Gift_Box.png" />
+                  <Image url="@../../../assets/Gift_Box.png" />
                </image>
             </ImageView>
          </graphic>
@@ -85,7 +85,7 @@
          <graphic>
             <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Leftover.jpeg" />
+                  <Image url="@../../../assets/Leftover.jpeg" />
                </image>
             </ImageView>
          </graphic>
@@ -102,7 +102,7 @@
          <graphic>
             <ImageView fitHeight="28.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Hotel_code.jpg" />
+                  <Image url="@../../../assets/Hotel_code.jpg" />
                </image>
             </ImageView>
          </graphic>
