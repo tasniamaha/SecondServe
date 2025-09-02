@@ -1,0 +1,131 @@
+/* --- Global Styles --- */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f4f7fa;
+}
+
+/* --- Header Bar --- */
+.header-bar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10px 25px;
+    -fx-border-color: #e0e6ec;
+    -fx-border-width: 0 0 1 0;
+}
+
+.app-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.user-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.logout-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 14px;
+    -fx-text-fill: #c0392b;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-margin-left: 20px;
+}
+
+/* --- Sidebar Navigation --- */
+.sidebar {
+    -fx-background-color: #ffffff;
+    -fx-pref-width: 240px;
+    -fx-padding: 20px 0;
+    -fx-border-color: #e0e6ec;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #34495e;
+    -fx-font-size: 15px;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 240px;
+    -fx-padding: 0 0 0 30px;
+    -fx-alignment: center-left;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.nav-button.active {
+    -fx-background-color: #ecf0f1;
+    -fx-font-weight: bold;
+    -fx-border-color: #16a085; /* Green accent color */
+    -fx-border-width: 0 0 0 4px; /* Left border */
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    -fx-padding: 30px 40px;
+}
+
+.content-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.content-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+/* --- Request Card Styles --- */
+.request-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20px;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e0e6ec;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
+    -fx-alignment: center-left;
+}
+
+.ngo-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.food-item, .date {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding-top: 5px;
+}
+
+.approve-button, .reject-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.approve-button {
+    -fx-background-color: #27ae60; /* Green */
+    -fx-text-fill: white;
+}
+.approve-button:hover {
+    -fx-background-color: #229954;
+}
+
+.reject-button {
+    -fx-background-color: #e74c3c; /* Red */
+    -fx-text-fill: white;
+}
+.reject-button:hover {
+    -fx-background-color: #c0392b;
+}

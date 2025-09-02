@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox stylesheets="@NgoProfile.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.NgoProfileController">
+<VBox prefHeight="458.0" prefWidth="658.0" stylesheets="@NgoProfile.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.NgoProfileController">
     <padding>
         <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
     </padding>
@@ -37,10 +37,21 @@
                 <Label fx:id="emailLabel" styleClass="profile-value" text="contact@helpinghands.org" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label fx:id="phoneLabel" styleClass="profile-value" text="+1 (555) 123-4567" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <Label fx:id="addressLabel" styleClass="profile-value" text="456 Charity Lane, Philanthropy City, PC 12345" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
             </GridPane>
 
             <!-- 2. EDIT MODE PANE (Initially Hidden) -->
-            <GridPane fx:id="editPane" hgap="10" vgap="15" visible="false" managed="false">
+            <GridPane fx:id="editPane" hgap="10" managed="false" vgap="15" visible="false">
                 <!-- Field Labels -->
                 <Label styleClass="profile-label" text="NGO Name" GridPane.rowIndex="0" />
                 <Label styleClass="profile-label" text="Contact Person" GridPane.rowIndex="1" />
@@ -51,9 +62,20 @@
                 <!-- Field Inputs (TextFields) -->
                 <TextField fx:id="nameField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                 <TextField fx:id="contactPersonField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <TextField fx:id="emailField" styleClass="text-field" editable="false" promptText="Email cannot be changed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="emailField" editable="false" promptText="Email cannot be changed" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <TextField fx:id="phoneField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <TextField fx:id="addressField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
             </GridPane>
         </StackPane>
 
@@ -64,7 +86,7 @@
             <Button fx:id="editButton" onAction="#handleEditProfile" styleClass="edit-button" text="Edit Profile" />
 
             <!-- Edit Mode Buttons (Initially Hidden) -->
-            <HBox fx:id="editButtonsBox" spacing="10" visible="false" managed="false">
+            <HBox fx:id="editButtonsBox" managed="false" spacing="10" visible="false">
                 <Button onAction="#handleCancel" styleClass="cancel-button" text="Cancel" />
                 <Button onAction="#handleSaveChanges" styleClass="save-button" text="Save Changes" />
             </HBox>

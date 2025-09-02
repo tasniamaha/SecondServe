@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- This view is for the hotel manager to see and edit their own profile. -->
+
+<VBox styleClass="main-content" stylesheets="@hotelprofile.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelProfileController">
+
+    <!-- Page Header -->
+    <Label styleClass="content-title" text="Hotel Profile">
+      <padding>
+         <Insets bottom="10.0" />
+      </padding></Label>
+    <Label styleClass="content-subtitle" text="Manage your hotel's public information and contact details">
+      <padding>
+         <Insets bottom="10.0" />
+      </padding></Label>
+
+    <!-- Profile Card Container -->
+    <VBox styleClass="profile-card">
+        <StackPane fx:id="profileStackPane">
+            <!-- 1. VIEW MODE PANE (Visible by default) -->
+            <GridPane fx:id="viewPane" hgap="15" vgap="18">
+                <Label styleClass="profile-label" text="Hotel Name" GridPane.rowIndex="0" />
+                <Label styleClass="profile-label" text="Manager Name" GridPane.rowIndex="1" />
+                <Label styleClass="profile-label" text="Email Address" GridPane.rowIndex="2" />
+                <Label styleClass="profile-label" text="Contact Number" GridPane.rowIndex="3" />
+                <Label styleClass="profile-label" text="Full Address" GridPane.rowIndex="4" />
+                <Label styleClass="profile-label" text="Hotel License" GridPane.rowIndex="5" />
+
+                <Label fx:id="hotelNameLabel" styleClass="profile-value" text="The Grand Plaza Hotel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Label fx:id="managerNameLabel" styleClass="profile-value" text="John Smith" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label fx:id="emailLabel" styleClass="profile-value" text="manager@grandplaza.com" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label fx:id="phoneLabel" styleClass="profile-value" text="(555) 123-4567" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label fx:id="addressLabel" styleClass="profile-value" text="123 Luxury Ave, Metro City, ST 12345" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label fx:id="licenseLabel" styleClass="profile-value" text="HOTEL-LIC-98765" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <!-- 2. EDIT MODE PANE (Initially Hidden) -->
+            <GridPane fx:id="editPane" hgap="15" managed="false" vgap="12" visible="false">
+                <Label styleClass="profile-label" text="Hotel Name" GridPane.rowIndex="0" />
+                <Label styleClass="profile-label" text="Manager Name" GridPane.rowIndex="1" />
+                <Label styleClass="profile-label" text="Email Address" GridPane.rowIndex="2" />
+                <Label styleClass="profile-label" text="Contact Number" GridPane.rowIndex="3" />
+                <Label styleClass="profile-label" text="Full Address" GridPane.rowIndex="4" />
+                <Label styleClass="profile-label" text="Hotel License" GridPane.rowIndex="5" />
+
+                <TextField fx:id="hotelNameField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="managerNameField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="emailField" editable="false" promptText="Email cannot be changed" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="phoneField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="addressField" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <TextField fx:id="licenseField" editable="false" promptText="License cannot be changed" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+        </StackPane>
+
+        <!-- Button Bar at the bottom -->
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <VBox.margin><Insets top="30.0" /></VBox.margin>
+            <Button fx:id="editButton" onAction="#handleEditProfile" styleClass="edit-button" text="Edit Profile" />
+            <HBox fx:id="editButtonsBox" managed="false" spacing="10" visible="false">
+                <Button onAction="#handleCancel" styleClass="cancel-button" text="Cancel" />
+                <Button onAction="#handleSaveChanges" styleClass="save-button" text="Save Changes" />
+            </HBox>
+        </HBox>
+    </VBox>
+</VBox>

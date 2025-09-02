@@ -1,0 +1,55 @@
+/* ======================================================= */
+/*         STYLES SPECIFICALLY FOR NgoDetailsView.fxml         */
+/* ======================================================= */
+
+/* --- Card for the main NGO details (duplicate for consistency) --- */
+.profile-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 30px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e6ec;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
+}
+
+.profile-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+}
+
+.profile-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* --- Styles unique to the NGO Details view --- */
+.verification-section {
+    -fx-border-color: #e0e6ec;
+    -fx-border-width: 2px 0 0 0;
+    -fx-padding-top: 20px;
+    -fx-margin-top: 25px;
+}
+
+.license-value {
+    -fx-font-family: "Consolas", "Monospaced";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+    -fx-background-color: #ecf0f1;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-margin-top: 5px;
+}
+
+/* --- Back button specific style if needed, can also be in base --- */
+.back-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5px;
+    -fx-text-fill: #495057;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8px 15px;
+}
+.back-button:hover { -fx-background-color: #f1f3f5; }

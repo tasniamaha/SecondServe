@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="10.0" styleClass="root" stylesheets="@opening-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.RoleSelectionController">
+<VBox alignment="CENTER" prefHeight="664.0" prefWidth="989.0" spacing="10.0" styleClass="root" stylesheets="@opening-styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.RoleSelectionController">
     <padding>
         <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
     </padding>
@@ -31,13 +31,13 @@
     <Label styleClass="header-subtitle" text="Choose your role to get started" />
 
     <!-- Roles Section -->
-    <HBox alignment="CENTER" spacing="30.0" >
+    <HBox alignment="CENTER" spacing="30.0">
         <padding>
             <Insets bottom="30.0" top="30.0" />
         </padding>
 
         <!-- Kitchen Staff Card -->
-        <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="role-card">
+        <VBox alignment="TOP_CENTER" maxWidth="348.0" prefHeight="298.0" prefWidth="348.0" spacing="15.0" styleClass="role-card">
             <StackPane styleClass="icon-container, kitchen-icon-border">
                 <!-- MODIFIED: Increased icon size -->
                 <ImageView fx:id="kitchenStaffIcon" fitHeight="70.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true" />
@@ -59,7 +59,7 @@
         </VBox>
 
         <!-- NGO Representative Card -->
-        <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="role-card">
+        <VBox alignment="TOP_CENTER" maxWidth="374.0" prefHeight="298.0" prefWidth="374.0" spacing="15.0" styleClass="role-card">
             <StackPane styleClass="icon-container, ngo-icon-border">
                 <!-- MODIFIED: Increased icon size -->
                 <ImageView fx:id="ngoIcon" fitHeight="74.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" />

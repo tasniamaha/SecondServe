@@ -1,0 +1,100 @@
+.content-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding-bottom: 5px; /* Added for spacing */
+}
+
+.content-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding-bottom: 20px; /* Added more space to separate from the card below */
+}
+profile-card {
+
+    -fx-background-color: #ffffff;
+    -fx-padding: 30px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e6ec;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
+}
+
+.profile-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+}
+
+.profile-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* --- Edit Mode Fields --- */
+.text-field {
+    -fx-font-size: 14px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px 12px;
+}
+.text-field:focused {
+    -fx-border-color: #16a085; /* Green accent color */
+    -fx-background-color: #ffffff;
+}
+
+/* --- Profile Action Buttons (Edit, Save, Cancel) --- */
+.edit-button, .cancel-button, .save-button {
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+.save-button {
+    -fx-background-color: #16a085;
+    -fx-text-fill: white;
+}
+.save-button:hover { -fx-background-color: #138d75; }
+
+.edit-button, .cancel-button {
+    -fx-background-color: #f1f3f5;
+    -fx-text-fill: #343a40;
+}
+.edit-button:hover, .cancel-button:hover { -fx-background-color: #e9ecef; }
+
+
+/* --- Styles for the Listed Donations Table on this page --- */
+.section-header {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+    -fx-padding: 10px 0;
+    -fx-border-color: #e0e6ec;
+    -fx-border-width: 0 0 2px 0;
+    -fx-margin-bottom: 10px;
+}
+.table-action-button {
+    -fx-font-size: 12px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+.edit-item-button {
+    -fx-background-color: #3498db; /* Blue */
+    -fx-text-fill: white;
+}
+.edit-item-button:hover { -fx-background-color: #2980b9; }
+
+.remove-item-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e74c3c; /* Red */
+    -fx-border-color: #e74c3c;
+    -fx-border-radius: 5px;
+}
+.remove-item-button:hover {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
