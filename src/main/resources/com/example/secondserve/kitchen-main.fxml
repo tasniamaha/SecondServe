@@ -28,7 +28,7 @@
             </Label>
             <Region HBox.hgrow="ALWAYS" />
             <Label styleClass="hotel-name" text="grand plaza hotel" />
-            <Button mnemonicParsing="false" styleClass="logout-button" text="log out">
+            <Button fx:id="logout" onAction="handleLogout" mnemonicParsing="false" styleClass="logout-button" text="log out">
                 <HBox.margin>
                     <Insets left="15.0" />
                 </HBox.margin>
@@ -99,7 +99,7 @@
                         <Insets top="15.0" />
                     </VBox.margin>
                 </VBox>
-                <Button onAction="#handleLogLeftoverItem" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" text="Log Leftover Item">
+                <Button fx:id="logLeftoverButton" onAction="#handleLogLeftoverItem" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" text="Log Leftover Item">
                     <VBox.margin>
                         <Insets top="30.0" />
                     </VBox.margin>

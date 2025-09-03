@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -36,7 +36,8 @@ public class HotelProfileController {
 
     // --- API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
 
     private HotelDto currentHotelData; // Store the currently displayed hotel data
 
@@ -70,6 +71,7 @@ public class HotelProfileController {
                                 this.currentHotelData = objectMapper.readValue(response.body(), HotelDto.class);
                                 populateViewLabels(currentHotelData);
                             } catch (IOException e) {
+                                e.printStackTrace();
                                 showAlert(Alert.AlertType.ERROR, "Data Error", "Failed to parse hotel profile data from server.");
                             }
                         } else {
@@ -145,11 +147,15 @@ public class HotelProfileController {
                                 populateViewLabels(this.currentHotelData);
                                 showAlert(Alert.AlertType.INFORMATION, "Success", "Profile updated successfully.");
                                 switchToViewMode();
-                            } catch (IOException e) { /* handle error */ }
+                            } catch (IOException e) { e.printStackTrace();}
                         } else {
+                            System.out.println("Update failed. Server responded with status code: " + response.statusCode());
+                            System.out.println("Server error response body: " + response.body());
                             showAlert(Alert.AlertType.ERROR, "Update Failed", "Could not save changes to the server.");
                         }
-                    })).exceptionally(e -> { /* handle error */ return null; });
+                    })).exceptionally(e -> {  e.printStackTrace();
+                        // -----------------------------------------
+                        Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Connection Error", "An unexpected error occurred.")); return null; });
 
         } catch (IOException e) {
             e.printStackTrace();

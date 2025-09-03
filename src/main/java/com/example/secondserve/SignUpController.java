@@ -92,6 +92,9 @@ public class SignUpController {
 
     @FXML
     private void handleRegister(ActionEvent event) {
+        System.out.println("DEBUG: handleRegister method called.");
+
+
         if (userType == null) {
             showAlert(Alert.AlertType.ERROR, "Error", "No user type was selected.");
             return;
@@ -101,6 +104,7 @@ public class SignUpController {
             case "HOTEL_MANAGER": registerHotelManager(event); break;
             case "NGO": registerNGO(event); break;
         }
+
     }
 
     // --- Registration Logic ---
@@ -132,6 +136,7 @@ public class SignUpController {
         hotelDto.setHotelName(hotelName);
         hotelDto.setAddress(address);
         hotelDto.setHotelLicense(license);
+        System.out.println("DEBUG: Preparing to send Hotel Manager registration request to the server...");
         sendRegistrationRequest(hotelDto, "http://localhost:8080/api/hotels/register", event);
     }
 
@@ -160,12 +165,15 @@ public class SignUpController {
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
             httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenAccept(response -> handleServerResponse(response, event)).exceptionally(this::handleConnectionError);
         } catch (IOException e) {
+            System.err.println("DEBUG: FAILED before sending! Error converting DTO to JSON.");
             showAlert(Alert.AlertType.ERROR, "Application Error", "An error occurred while preparing the request.");
             registerButton.setDisable(false);
         }
     }
 
     private void handleServerResponse(HttpResponse<String> response, ActionEvent event) {
+        System.out.println("DEBUG: Received a response from the server! Status code: " + response.statusCode());
+        System.out.println("DEBUG: Response Body: " + response.body());
         Platform.runLater(() -> {
             if (response.statusCode() == 201) { // 201 Created
                 try {
@@ -193,6 +201,7 @@ public class SignUpController {
             showAlert(Alert.AlertType.ERROR, "Connection Error", "Could not connect to the server.");
             registerButton.setDisable(false);
         });
+        System.err.println("DEBUG: The HTTP request failed entirely!");
         return null;
     }
 
@@ -228,9 +237,9 @@ public class SignUpController {
         if (session == null) return;
         String fxmlFile = null, title = "SecondServe";
         switch (session.getUserType()) {
-            case "KITCHEN_STAFF": fxmlFile = "KitchenMain.fxml"; title = "Kitchen Interface"; break;
-            case "HOTEL_MANAGER": fxmlFile = "HotelDashboard.fxml"; title = "Hotel Dashboard"; break;
-            case "NGO": fxmlFile = "NgoPortal.fxml"; title = "NGO Portal"; break;
+            case "KITCHEN_STAFF": fxmlFile = "kitchen-main.fxml"; title = "Kitchen Interface"; break;
+            case "HOTEL_MANAGER": fxmlFile = "HotelManager_Dashboard.fxml"; title = "Hotel Dashboard"; break;
+            case "NGO": fxmlFile = "ngo-portal.fxml"; title = "NGO Portal"; break;
             default: showAlert(Alert.AlertType.ERROR, "Error", "Unknown user role."); return;
         }
         navigateToView(((Node) event.getSource()), fxmlFile, title);

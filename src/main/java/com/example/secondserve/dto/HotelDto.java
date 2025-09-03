@@ -1,5 +1,10 @@
 package com.example.secondserve.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.time.LocalDateTime;
+
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class HotelDto {
     private long id;
     private String managerName;
@@ -9,6 +14,11 @@ public class HotelDto {
     private String address;
     private String hotelLicense;
     private String phone;
+    private String city;
+    private String state;
+    private String postalCode;
+    private LocalDateTime registrationDate;
+    private String hotelCode;
     public String getManagerName() {
         return managerName;
     }
@@ -71,6 +81,46 @@ public class HotelDto {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getHotelCode() {
+        return hotelCode;
+    }
+
+    public void setHotelCode(String hotelCode) {
+        this.hotelCode = hotelCode;
     }
     // Getters and Setters for all fields...
 }

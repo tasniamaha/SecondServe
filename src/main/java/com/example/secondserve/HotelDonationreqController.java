@@ -18,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,6 +33,8 @@ public class HotelDonationreqController {
     // --- FXML UI Components ---
     @FXML private VBox requestsContainer;
     @FXML private Label hotelNameLabel;
+    @FXML private Button profileButton;
+    @FXML private Button requestsButton;
 
     // --- API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -41,54 +42,49 @@ public class HotelDonationreqController {
 
     @FXML
     public void initialize() {
-        // Set the hotel name in the header from the logged-in user's session
         if (SessionManager.getSession() != null) {
             hotelNameLabel.setText(SessionManager.getSession().getName());
         }
-
-        // Fetch the list of pending donation requests from the server
         loadPendingRequests();
     }
 
     private void loadPendingRequests() {
+        // ... (this method is correct, no changes needed)
         String authToken = SessionManager.getAuthToken();
         Long hotelId = SessionManager.getSession() != null ? SessionManager.getSession().getUserId() : null;
-
         if (authToken == null || hotelId == null) {
-            showAlert("Authentication Error", "Could not verify user. Please log in again.");
+            showAlert(Alert.AlertType.ERROR, "Authentication Error", "Could not verify user. Please log in again.");
             return;
         }
-
-        // Use the specific endpoint for pending requests for the logged-in hotel
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/food-requests/hotel/" + hotelId + "/pending"))
                 .header("Authorization", authToken)
                 .GET()
                 .build();
-
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(this::handleRequestsResponse)
                 .exceptionally(this::handleConnectionError);
     }
 
     private void handleRequestsResponse(HttpResponse<String> response) {
+        // ... (this method is correct, no changes needed)
         Platform.runLater(() -> {
             if (response.statusCode() == 200) {
                 try {
                     List<FoodRequestDto> requests = objectMapper.readValue(response.body(), new TypeReference<>() {});
                     displayRequests(requests);
                 } catch (IOException e) {
-                    showAlert("Application Error", "Could not parse the list of requests from the server.");
+                    showAlert(Alert.AlertType.ERROR, "Application Error", "Could not parse the list of requests from the server.");
                 }
             } else {
-                showAlert("Server Error", "Could not load donation requests. Status: " + response.statusCode());
+                showAlert(Alert.AlertType.ERROR, "Server Error", "Could not load donation requests. Status: " + response.statusCode());
             }
         });
     }
 
     private void displayRequests(List<FoodRequestDto> requests) {
-        requestsContainer.getChildren().clear(); // Clear any existing content
-
+        // ... (this method is correct, no changes needed)
+        requestsContainer.getChildren().clear();
         if (requests == null || requests.isEmpty()) {
             Label placeholder = new Label("There are no pending donation requests at this time.");
             placeholder.getStyleClass().add("placeholder-text");
@@ -101,12 +97,36 @@ public class HotelDonationreqController {
         }
     }
 
-    private Void handleConnectionError(Throwable e) {
-        Platform.runLater(() -> showAlert("Connection Error", "Could not connect to the server."));
-        return null;
-    }
+    private HBox createRequestCard(FoodRequestDto request) {
+        // ... (this method is correct, no changes needed)
+        VBox textContainer = new VBox(5.0);
+        Label ngoNameLabel = new Label(request.getNgoName());
+        ngoNameLabel.getStyleClass().add("ngo-name");
+        String foodDetails = String.format("Requested: %.2f %s of %s", request.getRequestedQuantity(), request.getUnit(), request.getFoodItemName());
+        Label foodItemLabel = new Label(foodDetails);
+        foodItemLabel.getStyleClass().add("food-item");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy 'at' hh:mm a");
+        Label dateLabel = new Label("Received: " + request.getRequestDate().format(formatter));
+        dateLabel.getStyleClass().add("date");
+        textContainer.getChildren().addAll(ngoNameLabel, foodItemLabel, dateLabel);
 
-    // --- Button Actions (Approve / Reject) ---
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button approveButton = new Button("Approve");
+        approveButton.getStyleClass().add("approve-button");
+        Button rejectButton = new Button("Reject");
+        rejectButton.getStyleClass().add("reject-button");
+        HBox buttonContainer = new HBox(10.0, approveButton, rejectButton);
+        buttonContainer.getStyleClass().add("button-container");
+
+        HBox card = new HBox(textContainer, spacer, buttonContainer);
+        card.getStyleClass().add("request-card");
+
+        approveButton.setOnAction(event -> handleApprove(request, card));
+        rejectButton.setOnAction(event -> handleReject(request, card));
+        return card;
+    }
 
     private void handleApprove(FoodRequestDto requestDto, HBox cardNode) {
         updateRequestStatus(requestDto, "approve", cardNode);
@@ -117,73 +137,64 @@ public class HotelDonationreqController {
     }
 
     private void updateRequestStatus(FoodRequestDto requestDto, String action, HBox cardNode) {
+        // ... (this method is correct, no changes needed)
         String authToken = SessionManager.getAuthToken();
         if (authToken == null) return;
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/food-requests/" + requestDto.getId() + "/" + action))
                 .header("Authorization", authToken)
-                .PUT(HttpRequest.BodyPublishers.noBody()) // PUT request with no body
+                .PUT(HttpRequest.BodyPublishers.noBody())
                 .build();
-
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> Platform.runLater(() -> {
                     if (response.statusCode() == 200) {
-                        requestsContainer.getChildren().remove(cardNode); // Remove the card from the UI
-                        showAlert("Success", "The request has been " + action + "d.");
+                        requestsContainer.getChildren().remove(cardNode);
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "The request has been " + (action.equals("approve") ? "approved." : "rejected."));
                     } else {
-                        showAlert("Error", "Could not update the request status. It may have already been processed.");
+                        showAlert(Alert.AlertType.ERROR, "Error", "Could not update the request status. It may have already been processed.");
                     }
                 })).exceptionally(this::handleConnectionError);
     }
 
-    // --- UI Factory Method for Creating Cards ---
+    // --- Navigation Methods ---
 
-    private HBox createRequestCard(FoodRequestDto request) {
-        // VBox for text
-        VBox textContainer = new VBox();
-        Label ngoNameLabel = new Label(request.getNgoName());
-        ngoNameLabel.getStyleClass().add("ngo-name");
-
-        String foodDetails = String.format("Requested: %s %s of %s",
-                request.getRequestedQuantity().toString(), request.getUnit(), request.getFoodItemName());
-        Label foodItemLabel = new Label(foodDetails);
-        foodItemLabel.getStyleClass().add("food-item");
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy 'at' hh:mm a");
-        Label dateLabel = new Label("Received: " + request.getRequestDate().format(formatter));
-        dateLabel.getStyleClass().add("date");
-        textContainer.getChildren().addAll(ngoNameLabel, foodItemLabel, dateLabel);
-
-        // Spacer region
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        // HBox for buttons
-        Button approveButton = new Button("Approve");
-        approveButton.getStyleClass().add("approve-button");
-
-        Button rejectButton = new Button("Reject");
-        rejectButton.getStyleClass().add("reject-button");
-        HBox buttonContainer = new HBox(10.0, approveButton, rejectButton);
-        buttonContainer.getStyleClass().add("button-container");
-
-        // Main card HBox
-        HBox card = new HBox(textContainer, spacer, buttonContainer);
-        card.getStyleClass().add("request-card");
-
-        // --- IMPORTANT: Set actions here ---
-        approveButton.setOnAction(event -> handleApprove(request, card));
-        rejectButton.setOnAction(event -> handleReject(request, card));
-
-        return card;
+    @FXML
+    public void handleShowDashboard(ActionEvent actionEvent) throws IOException {
+        Parent dashboardView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("HotelManager_Dashboard.fxml")));
+        Scene scene = ((Node) actionEvent.getSource()).getScene();
+        scene.setRoot(dashboardView);
     }
 
-    // --- Navigation (Implement as needed) ---
-    @FXML public void handleShowProfile(ActionEvent actionEvent) { System.out.println("Navigate to Profile"); }
-    @FXML public void handleLogout(ActionEvent actionEvent) { System.out.println("Log Out"); }
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    @FXML
+    public void handleShowProfile(ActionEvent actionEvent) throws IOException {
+        Parent profileView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("HotelManager_Profile.fxml")));
+        Scene scene = ((Node) actionEvent.getSource()).getScene();
+        scene.setRoot(profileView);
+    }
+
+    @FXML
+    public void handleShowRequests(ActionEvent actionEvent) {
+        // Since this is the current view, we just refresh the data.
+        loadPendingRequests();
+    }
+
+    @FXML
+    public void handleLogout(ActionEvent actionEvent) throws IOException {
+        SessionManager.clearSession();
+        Parent loginView = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("Login.fxml")));
+        Scene scene = ((Node) actionEvent.getSource()).getScene();
+        scene.setRoot(loginView);
+    }
+
+    private Void handleConnectionError(Throwable e) {
+        // ... (this method is correct, no changes needed)
+        Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Connection Error", "Could not connect to the server."));
+        return null;
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        // ... (this method is correct, no changes needed)
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(title);
         alert.setContentText(message);

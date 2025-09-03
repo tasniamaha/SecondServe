@@ -158,9 +158,9 @@ public class LoginController {
         String title = "SecondServe";
 
         switch (session.getUserType()) {
-            case "KITCHEN_STAFF": fxmlFile = "KitchenMain.fxml"; title = "Kitchen Interface"; break;
-            case "HOTEL_MANAGER": fxmlFile = "HotelDashboard.fxml"; title = "Hotel Dashboard"; break;
-            case "NGO": fxmlFile = "NgoPortal.fxml"; title = "NGO Portal"; break;
+            case "KITCHEN_STAFF": fxmlFile = "kitchen-main.fxml"; title = "Kitchen Interface"; break;
+            case "HOTEL_MANAGER": fxmlFile = "HotelManager_Dashboard.fxml"; title = "Hotel Dashboard"; break;
+            case "NGO": fxmlFile = "ngo-portal.fxml"; title = "NGO Portal"; break;
             default:
                 showAlert("Error", "Unknown user role: " + session.getUserType());
                 return;

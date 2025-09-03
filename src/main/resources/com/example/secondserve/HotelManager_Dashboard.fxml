@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" styleClass="root" stylesheets="@hotelDashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelDashboardController">
+<BorderPane fx:id="mainBorderPane" prefHeight="720.0" prefWidth="1280.0" styleClass="root" stylesheets="@hotelDashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelDashboardController">
 
    <!-- TOP: Header Bar -->
    <top>
@@ -24,6 +24,7 @@
          </ImageView>
          <Label styleClass="app-title" text="Hotel Management Dashboard" />
          <Region HBox.hgrow="ALWAYS" />
+         <Label fx:id="hotelName" text="Hotel Name" />
          <Button onAction="#handleLogout" styleClass="logout-button" text="Log Out" />
       </HBox>
    </top>
@@ -31,9 +32,9 @@
    <!-- LEFT: Sidebar Navigation -->
    <left>
       <VBox styleClass="sidebar">
-         <Button onAction="#handleShowDashboard" styleClass="nav-button, active" text="Main Dashboard" />
-         <Button onAction="#handleShowProfile" styleClass="nav-button" text="Hotel Profile" />
-         <Button onAction="#handleShowRequests" styleClass="nav-button" text="Donation Requests" />
+         <Button fx:id="dashboardButton" onAction="#handleShowDashboard" styleClass="nav-button, active" text="Main Dashboard" />
+         <Button fx:id="profileButton" onAction="#handleShowProfile" styleClass="nav-button" text="Hotel Profile" />
+         <Button fx:id="requestsButton" onAction="#handleShowRequests" styleClass="nav-button" text="Donation Requests" />
       </VBox>
    </left>
 
@@ -64,7 +65,7 @@
                   <Label styleClass="stat-unit" text=" Kg" />
                </HBox>
             </VBox>
-            <!-- Card 4: Hotel Code -->
+            <!-- Card 3: Hotel Code -->
             <VBox styleClass="stat-card" GridPane.columnIndex="2">
                <Label styleClass="stat-title" text="Your Unique Hotel Code" />
                <Region VBox.vgrow="ALWAYS" />

@@ -1,5 +1,6 @@
 package com.example.secondserve;
 
+import com.example.secondserve.dto.AuthResponse;
 import com.example.secondserve.dto.DashboardStatsDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -34,7 +35,7 @@ public class HotelDashboardController {
     @FXML private Button profileButton;
     @FXML private Button requestsButton;
     @FXML private VBox newLeftoversContainer;
-
+    @FXML private Label hotelName;
     // A reference to the initial dashboard view to easily return to it.
     private Node dashboardView;
     private Button activeButton;
@@ -45,6 +46,12 @@ public class HotelDashboardController {
     @FXML
     public void initialize() {
         // Store the initial dashboard content before we navigate away from it.
+        AuthResponse session = SessionManager.getSession();
+        if (session != null) {
+            // --- THIS IS THE CORRECTED LINE ---
+            // Use getOrganizationName() instead of getName()
+            hotelName.setText(session.getOrganizationName());
+        }
         this.dashboardView = mainBorderPane.getCenter();
 
         // Set the "Main Dashboard" button as active visually.
@@ -69,7 +76,7 @@ public class HotelDashboardController {
      */
     @FXML
     public void handleShowProfile(ActionEvent actionEvent) {
-        loadViewIntoCenter("HotelProfileView.fxml");
+        loadViewIntoCenter("hotelManager_profile.fxml");
         setActiveButton(profileButton);
     }
 
@@ -78,7 +85,7 @@ public class HotelDashboardController {
      */
     @FXML
     public void handleShowRequests(ActionEvent actionEvent) {
-        loadViewIntoCenter("DonationRequestsView.fxml"); // Ensure this FXML file exists
+        loadViewIntoCenter("HotelManager_DonationReq.fxml"); // Ensure this FXML file exists
         setActiveButton(requestsButton);
     }
 
