@@ -10,6 +10,7 @@ module com.example.secondserve {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.net.http;
 
     opens com.example.secondserve to javafx.fxml;
     exports com.example.secondserve;

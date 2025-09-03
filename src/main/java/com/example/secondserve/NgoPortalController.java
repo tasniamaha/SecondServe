@@ -1,4 +1,4 @@
-package com.yourcompany.yourapp; // Make sure this matches your project structure
+package com.example.secondserve; // Make sure this matches your project structure
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
