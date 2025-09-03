@@ -249,3 +249,11 @@
 .request-button:hover {
     -fx-background-color: #138d75;
 }
+.pending-button {
+    -fx-background-color: #f1c40f; /* A yellow color */
+    -fx-text-fill: #5B4804;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 5px;
+}

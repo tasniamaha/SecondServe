@@ -13,7 +13,8 @@
     This view displays the details of a single hotel and its available food donations.
     It's intended to be loaded dynamically into the NGO Portal.
 -->
-<VBox styleClass="main-content" stylesheets="@NgoPortal.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelDonationViewController">
+
+<VBox styleClass="main-content" stylesheets="@NgoPortal.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelDonationViewController">
     <padding>
         <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
     </padding>
@@ -45,12 +46,12 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
         <columns>
-            <TableColumn fx:id="itemNameColumn" text="Item Name" prefWidth="250.0" />
-            <TableColumn fx:id="quantityColumn" text="Available Quantity" prefWidth="150.0" />
-            <TableColumn fx:id="conditionColumn" text="Condition" prefWidth="120.0" />
-            <TableColumn fx:id="expiryDateColumn" text="Expires On" prefWidth="120.0" />
+            <TableColumn fx:id="itemNameColumn" prefWidth="250.0" text="Item Name" />
+            <TableColumn fx:id="quantityColumn" prefWidth="167.20001220703125" text="Available Quantity" />
+            <TableColumn fx:id="conditionColumn" prefWidth="103.19992065429688" text="Condition" />
+            <TableColumn fx:id="expiryDateColumn" prefWidth="120.0" text="Expires On" />
             <!-- The 'Request' button will go in this column -->
-            <TableColumn fx:id="requestColumn" text="Action" prefWidth="150.0" style="-fx-alignment: CENTER;" />
+            <TableColumn fx:id="requestColumn" prefWidth="150.0" style="-fx-alignment: CENTER;" text="Action" />
         </columns>
         <placeholder>
             <Label styleClass="placeholder-text" text="This hotel has no available food items at this time." />

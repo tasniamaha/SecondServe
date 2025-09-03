@@ -1,73 +1,55 @@
 package com.example.secondserve;
 
+import com.example.secondserve.dto.AuthResponse;
+import com.example.secondserve.dto.HotelDto;
+import com.example.secondserve.dto.KitchenStaffDto;
+import com.example.secondserve.dto.NgoDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.net.URL;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Objects;
 
 public class SignUpController {
 
+    // --- FXML UI Components ---
     @FXML private ImageView logoImageView;
     @FXML private Label userTypeLabel;
-    @FXML private Button backButton;
-    @FXML private Hyperlink loginLink;
     @FXML private Button registerButton;
-
-    // Kitchen Staff fields
-    @FXML private TextField staffNameField;
-    @FXML private TextField staffEmailField;
+    @FXML private VBox kitchenStaffForm, hotelManagerForm, ngoForm;
+    @FXML private TextField staffNameField, staffEmailField, hotelCodeField, positionField;
     @FXML private PasswordField staffPasswordField;
-    @FXML private TextField hotelCodeField;
-    @FXML private TextField positionField;
-
-    // Hotel Manager fields
-    @FXML private TextField managerNameField;
-    @FXML private TextField managerEmailField;
+    @FXML private TextField managerNameField, managerEmailField, hotelNameField, hotelAddressField, hotelLicenseField;
     @FXML private PasswordField managerPasswordField;
-    @FXML private TextField hotelNameField;
-    @FXML private TextField hotelAddressField;
-    @FXML private TextField hotelLicenseField;
-
-    // NGO fields
-    @FXML private TextField adminNameField;
-    @FXML private TextField ngoEmailField;
+    @FXML private TextField adminNameField, ngoEmailField, ngoNameField, ngoAddressField, ngoContactField, ngoLicenseField;
     @FXML private PasswordField ngoPasswordField;
-    @FXML private TextField ngoNameField;
-    @FXML private TextField ngoAddressField;
-    @FXML private TextField ngoContactField;
-    @FXML private TextField ngoLicenseField;
-
-    // Form containers
-    @FXML private VBox kitchenStaffForm;
-    @FXML private VBox hotelManagerForm;
-    @FXML private VBox ngoForm;
 
     private String userType;
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @FXML
     public void initialize() {
         try {
             logoImageView.setImage(loadImage("/assets/SecondServe_logo.png"));
         } catch (Exception e) {
-            System.err.println("Failed to load images from controller!");
-            e.printStackTrace();
+            System.err.println("Failed to load logo image: " + e.getMessage());
         }
-
-        // Initially hide all forms
         kitchenStaffForm.managedProperty().bind(kitchenStaffForm.visibleProperty());
         hotelManagerForm.managedProperty().bind(hotelManagerForm.visibleProperty());
         ngoForm.managedProperty().bind(ngoForm.visibleProperty());
@@ -77,255 +59,200 @@ public class SignUpController {
         return new Image(Objects.requireNonNull(getClass().getResourceAsStream(path)));
     }
 
-    // Method to set user type from previous screen
     public void setUserType(String userType) {
         this.userType = userType;
-        System.out.println("User type set to: " + userType);
-
-        // Update the label and show the appropriate form
         if (userTypeLabel != null) {
+            String labelText = "Register as ";
+            VBox formToShow = null;
             switch (userType) {
                 case "KITCHEN_STAFF":
-                    userTypeLabel.setText("Register as Kitchen Staff");
-                    showForm("KITCHEN_STAFF");
+                    labelText += "Kitchen Staff";
+                    formToShow = kitchenStaffForm;
                     break;
                 case "HOTEL_MANAGER":
-                    userTypeLabel.setText("Register as Hotel Manager");
-                    showForm("HOTEL_MANAGER");
+                    labelText += "Hotel Manager";
+                    formToShow = hotelManagerForm;
                     break;
                 case "NGO":
-                    userTypeLabel.setText("Register as NGO Representative");
-                    showForm("NGO");
+                    labelText += "NGO Representative";
+                    formToShow = ngoForm;
                     break;
             }
+            userTypeLabel.setText(labelText);
+            if (formToShow != null) showForm(formToShow);
         }
     }
 
-    private void showForm(String userType) {
-        // Hide all forms first
-        if (kitchenStaffForm != null) kitchenStaffForm.setVisible(false);
-        if (hotelManagerForm != null) hotelManagerForm.setVisible(false);
-        if (ngoForm != null) ngoForm.setVisible(false);
-
-        // Show the appropriate form
-        switch (userType) {
-            case "KITCHEN_STAFF":
-                if (kitchenStaffForm != null) kitchenStaffForm.setVisible(true);
-                break;
-            case "HOTEL_MANAGER":
-                if (hotelManagerForm != null) hotelManagerForm.setVisible(true);
-                break;
-            case "NGO":
-                if (ngoForm != null) ngoForm.setVisible(true);
-                break;
-        }
+    private void showForm(VBox formToShow) {
+        kitchenStaffForm.setVisible(false);
+        hotelManagerForm.setVisible(false);
+        ngoForm.setVisible(false);
+        formToShow.setVisible(true);
     }
 
     @FXML
     private void handleRegister(ActionEvent event) {
         if (userType == null) {
-            showAlert("Error", "Please select a user type.");
+            showAlert(Alert.AlertType.ERROR, "Error", "No user type was selected.");
             return;
         }
-
         switch (userType) {
-            case "KITCHEN_STAFF":
-                registerKitchenStaff();
-                break;
-            case "HOTEL_MANAGER":
-                registerHotelManager();
-                break;
-            case "NGO":
-                registerNGO();
-                break;
+            case "KITCHEN_STAFF": registerKitchenStaff(event); break;
+            case "HOTEL_MANAGER": registerHotelManager(event); break;
+            case "NGO": registerNGO(event); break;
         }
     }
 
-    @FXML
-    private void handleBackButton(ActionEvent event) {
-        navigateToRoleSelection(event);
+    // --- Registration Logic ---
+    private void registerKitchenStaff(ActionEvent event) {
+        String name = staffNameField.getText(), email = staffEmailField.getText(), password = staffPasswordField.getText(), hotelCode = hotelCodeField.getText();
+        if (name.trim().isEmpty() || email.trim().isEmpty() || password.isEmpty() || hotelCode.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in all required fields.");
+            return;
+        }
+        KitchenStaffDto staffDto = new KitchenStaffDto();
+        staffDto.setStaffName(name);
+        staffDto.setEmail(email);
+        staffDto.setPassword(password);
+        staffDto.setHotelCode(hotelCode);
+        staffDto.setPosition(positionField.getText());
+        sendRegistrationRequest(staffDto, "http://localhost:8080/api/staff/register", event);
     }
 
-    @FXML
-    private void handleLoginLink(ActionEvent event) {
+    private void registerHotelManager(ActionEvent event) {
+        String name = managerNameField.getText(), email = managerEmailField.getText(), password = managerPasswordField.getText(), hotelName = hotelNameField.getText(), address = hotelAddressField.getText(), license = hotelLicenseField.getText();
+        if (name.trim().isEmpty() || email.trim().isEmpty() || password.isEmpty() || hotelName.trim().isEmpty() || address.trim().isEmpty() || license.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in all required fields.");
+            return;
+        }
+        HotelDto hotelDto = new HotelDto();
+        hotelDto.setManagerName(name);
+        hotelDto.setEmail(email);
+        hotelDto.setPassword(password);
+        hotelDto.setHotelName(hotelName);
+        hotelDto.setAddress(address);
+        hotelDto.setHotelLicense(license);
+        sendRegistrationRequest(hotelDto, "http://localhost:8080/api/hotels/register", event);
+    }
+
+    private void registerNGO(ActionEvent event) {
+        String adminName = adminNameField.getText(), email = ngoEmailField.getText(), password = ngoPasswordField.getText(), ngoName = ngoNameField.getText(), address = ngoAddressField.getText(), contact = ngoContactField.getText(), license = ngoLicenseField.getText();
+        if (adminName.trim().isEmpty() || email.trim().isEmpty() || password.isEmpty() || ngoName.trim().isEmpty() || address.trim().isEmpty() || license.trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Please fill in all required fields.");
+            return;
+        }
+        NgoDto ngoDto = new NgoDto();
+        ngoDto.setContactPerson(adminName);
+        ngoDto.setEmail(email);
+        ngoDto.setPassword(password);
+        ngoDto.setNgoName(ngoName);
+        ngoDto.setAddress(address);
+        ngoDto.setPhone(contact);
+        ngoDto.setLicenseNumber(license);
+        sendRegistrationRequest(ngoDto, "http://localhost:8080/api/ngos/register", event);
+    }
+
+    // --- API Communication ---
+    private <T> void sendRegistrationRequest(T dto, String url, ActionEvent event) {
+        registerButton.setDisable(true);
+        try {
+            String requestBody = objectMapper.writeValueAsString(dto);
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(requestBody)).build();
+            httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenAccept(response -> handleServerResponse(response, event)).exceptionally(this::handleConnectionError);
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Application Error", "An error occurred while preparing the request.");
+            registerButton.setDisable(false);
+        }
+    }
+
+    private void handleServerResponse(HttpResponse<String> response, ActionEvent event) {
+        Platform.runLater(() -> {
+            if (response.statusCode() == 201) { // 201 Created
+                try {
+                    if (response.body() != null && response.body().contains("token")) {
+                        AuthResponse authResponse = objectMapper.readValue(response.body(), AuthResponse.class);
+                        SessionManager.createSession(authResponse);
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "Registration successful! You are now logged in.");
+                        navigateToDashboard(event);
+                    } else {
+                        showAlert(Alert.AlertType.INFORMATION, "Success", "Registration successful! You can now log in.");
+                        navigateToLogin(event); // --- FIXED: This was the method that was missing ---
+                    }
+                } catch (IOException e) {
+                    showAlert(Alert.AlertType.ERROR, "Application Error", "Could not process server response.");
+                }
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Registration Failed", "Could not create account. The email, license, or hotel code may already be in use or invalid.");
+            }
+            registerButton.setDisable(false);
+        });
+    }
+
+    private Void handleConnectionError(Throwable e) {
+        Platform.runLater(() -> {
+            showAlert(Alert.AlertType.ERROR, "Connection Error", "Could not connect to the server.");
+            registerButton.setDisable(false);
+        });
+        return null;
+    }
+
+    // --- Navigation ---
+    @FXML private void handleBackButton(ActionEvent event) {
+        navigateToView((Node) event.getSource(), "opening-view.fxml", "SecondServe - Choose Your Role");
+    }
+
+    @FXML private void handleLoginLink(ActionEvent event) {
         navigateToLogin(event);
     }
 
-    private void registerKitchenStaff() {
-        String name = staffNameField.getText();
-        String email = staffEmailField.getText();
-        String password = staffPasswordField.getText();
-        String hotelCode = hotelCodeField.getText();
-        String position = positionField.getText();
-
-        // Validate required fields
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || hotelCode.isEmpty()) {
-            showAlert("Error", "Please fill in all required fields.");
-            return;
-        }
-
-        // Add your registration logic here
-        System.out.println("Registering Kitchen Staff: " + name + ", " + email);
-        showAlert("Success", "Kitchen Staff registration successful!");
-
-        // Clear fields after successful registration
-        staffNameField.clear();
-        staffEmailField.clear();
-        staffPasswordField.clear();
-        hotelCodeField.clear();
-        positionField.clear();
-    }
-
-    private void registerHotelManager() {
-        String name = managerNameField.getText();
-        String email = managerEmailField.getText();
-        String password = managerPasswordField.getText();
-        String hotelName = hotelNameField.getText();
-        String hotelAddress = hotelAddressField.getText();
-        String hotelLicense = hotelLicenseField.getText();
-
-        // Validate required fields
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || hotelName.isEmpty() || hotelLicense.isEmpty()) {
-            showAlert("Error", "Please fill in all required fields.");
-            return;
-        }
-
-        // Add your registration logic here
-        System.out.println("Registering Hotel Manager: " + name + ", " + email);
-        showAlert("Success", "Hotel Manager registration successful!");
-
-        // Clear fields after successful registration
-        managerNameField.clear();
-        managerEmailField.clear();
-        managerPasswordField.clear();
-        hotelNameField.clear();
-        hotelAddressField.clear();
-        hotelLicenseField.clear();
-    }
-
-    private void registerNGO() {
-        String name = adminNameField.getText();
-        String email = ngoEmailField.getText();
-        String password = ngoPasswordField.getText();
-        String ngoName = ngoNameField.getText();
-        String ngoAddress = ngoAddressField.getText();
-        String ngoContact = ngoContactField.getText();
-        String ngoLicense = ngoLicenseField.getText();
-
-        // Validate required fields
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || ngoName.isEmpty() || ngoLicense.isEmpty()) {
-            showAlert("Error", "Please fill in all required fields.");
-            return;
-        }
-
-        // Add your registration logic here
-        System.out.println("Registering NGO: " + name + ", " + email);
-        showAlert("Success", "NGO registration successful!");
-
-        // Clear fields after successful registration
-        adminNameField.clear();
-        ngoEmailField.clear();
-        ngoPasswordField.clear();
-        ngoNameField.clear();
-        ngoAddressField.clear();
-        ngoContactField.clear();
-        ngoLicenseField.clear();
-    }
-
-    private void navigateToRoleSelection(ActionEvent event) {
-        try {
-            URL fxmlUrl = getClass().getResource("/com/example/secondserve/opening-view.fxml");
-            if (fxmlUrl == null) {
-                showAlert("Error", "Role selection form not found.");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Parent roleSelectionRoot = loader.load();
-
-            // Get current stage and preserve state
-            Button sourceButton = (Button) event.getSource();
-            Stage currentStage = (Stage) sourceButton.getScene().getWindow();
-
-            boolean wasMaximized = currentStage.isMaximized();
-            double currentWidth = currentStage.getWidth();
-            double currentHeight = currentStage.getHeight();
-            double currentX = currentStage.getX();
-            double currentY = currentStage.getY();
-
-            // Use current scene dimensions
-            Scene currentScene = sourceButton.getScene();
-            Scene roleSelectionScene = new Scene(roleSelectionRoot, currentScene.getWidth(), currentScene.getHeight());
-
-            currentStage.setScene(roleSelectionScene);
-
-            // Restore window state
-            if (wasMaximized) {
-                currentStage.setMaximized(true);
-            } else {
-                currentStage.setWidth(currentWidth);
-                currentStage.setHeight(currentHeight);
-                currentStage.setX(currentX);
-                currentStage.setY(currentY);
-            }
-
-            currentStage.setTitle("SecondServe - Choose Your Role");
-
-        } catch (Exception e) {
-            System.err.println("Failed to load role selection page: " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Error", "Cannot load role selection page: " + e.getMessage());
-        }
-    }
-
+    // --- FIXED: ADDED THE MISSING navigateToLogin METHOD ---
     private void navigateToLogin(ActionEvent event) {
         try {
-            URL fxmlUrl = getClass().getResource("/com/example/secondserve/login-fxml.fxml");
-            if (fxmlUrl == null) {
-                showAlert("Error", "Login form not found.");
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/secondserve/login-fxml.fxml"));
             Parent loginRoot = loader.load();
 
-            // Get current stage and preserve state
-            Hyperlink sourceLink = (Hyperlink) event.getSource();
-            Stage currentStage = (Stage) sourceLink.getScene().getWindow();
+            LoginController loginController = loader.getController();
+            loginController.setUserType(this.userType);
 
-            boolean wasMaximized = currentStage.isMaximized();
-            double currentWidth = currentStage.getWidth();
-            double currentHeight = currentStage.getHeight();
-            double currentX = currentStage.getX();
-            double currentY = currentStage.getY();
-
-            // Use current scene dimensions
-            Scene currentScene = sourceLink.getScene();
-            Scene loginScene = new Scene(loginRoot, currentScene.getWidth(), currentScene.getHeight());
-
-            currentStage.setScene(loginScene);
-
-            // Restore window state
-            if (wasMaximized) {
-                currentStage.setMaximized(true);
-            } else {
-                currentStage.setWidth(currentWidth);
-                currentStage.setHeight(currentHeight);
-                currentStage.setX(currentX);
-                currentStage.setY(currentY);
-            }
-
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.setScene(new Scene(loginRoot, currentStage.getScene().getWidth(), currentStage.getScene().getHeight()));
             currentStage.setTitle("SecondServe - Login");
-
-        } catch (Exception e) {
-            System.err.println("Failed to load login page: " + e.getMessage());
+        } catch(IOException e) {
             e.printStackTrace();
-            showAlert("Error", "Cannot load login page: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Cannot load the login page.");
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void navigateToDashboard(ActionEvent event) {
+        AuthResponse session = SessionManager.getSession();
+        if (session == null) return;
+        String fxmlFile = null, title = "SecondServe";
+        switch (session.getUserType()) {
+            case "KITCHEN_STAFF": fxmlFile = "KitchenMain.fxml"; title = "Kitchen Interface"; break;
+            case "HOTEL_MANAGER": fxmlFile = "HotelDashboard.fxml"; title = "Hotel Dashboard"; break;
+            case "NGO": fxmlFile = "NgoPortal.fxml"; title = "NGO Portal"; break;
+            default: showAlert(Alert.AlertType.ERROR, "Error", "Unknown user role."); return;
+        }
+        navigateToView(((Node) event.getSource()), fxmlFile, title);
+    }
+
+    private void navigateToView(Node sourceNode, String fxmlFile, String title) {
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/secondserve/" + fxmlFile)));
+            Stage stage = (Stage) sourceNode.getScene().getWindow();
+            stage.setScene(new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight()));
+            stage.setTitle(title);
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Cannot load page: " + fxmlFile);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * FIXED: This method now accepts an AlertType as the first argument.
+     */
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

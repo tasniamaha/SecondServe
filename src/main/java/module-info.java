@@ -11,6 +11,8 @@ module com.example.secondserve {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.net.http;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires com.fasterxml.jackson.databind;
 
     opens com.example.secondserve to javafx.fxml;
     exports com.example.secondserve;

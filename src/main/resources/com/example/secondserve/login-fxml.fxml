@@ -67,7 +67,7 @@
                 </VBox>
 
                 <!-- Sign In Button -->
-                <Button fx:id="loginButton" maxWidth="Infinity" mnemonicParsing="false" styleClass="login-button" text="Sign In" />
+                <Button fx:id="loginButton" onAction="#handleLogin" maxWidth="Infinity" mnemonicParsing="false" styleClass="login-button" text="Sign In" />
 
                 <!-- Sign Up Link Section -->
                 <HBox alignment="CENTER" spacing="8.0">
