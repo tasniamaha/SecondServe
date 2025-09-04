@@ -106,7 +106,8 @@
     -fx-padding: 10px;
     -fx-font-size: 14px;
     -fx-pref-height: 40px;
-    -fx-max-width: 1.7976931348623157E308; /* Ensure it expands */
+    -fx-max-width: Infinity;
+ /* Ensure it expands */
 }
 
 .text-field:focused {
@@ -128,7 +129,8 @@
     -fx-padding: 10px;
     -fx-font-size: 14px;
     -fx-pref-height: 40px;
-    -fx-max-width: 1.7976931348623157E308; /* Ensure it expands */
+    -fx-max-width: Infinity;
+ /* Ensure it expands */
 }
 
 .password-field:focused {
