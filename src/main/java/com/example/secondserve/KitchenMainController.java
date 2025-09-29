@@ -18,6 +18,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -39,10 +40,9 @@ public class KitchenMainController {
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private ComboBox<String> conditionComboBox;
     @FXML private TextArea notesArea;
-    @FXML private Button logLeftoverButton; // Link to the button
+    @FXML private Button logLeftoverButton;
     @FXML private VBox todaysItemsContainer;
-
-    private boolean isFirstItemLogged = true;
+    @FXML private Label placeholderLabel;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper()
@@ -53,9 +53,13 @@ public class KitchenMainController {
     public void initialize() {
         categoryComboBox.setItems(FXCollections.observableArrayList("Prepared Food", "Ingredients"));
         conditionComboBox.setItems(FXCollections.observableArrayList("Fresh", "Good", "Near Expiry"));
+
+        // Set proper spacing for the container
+        todaysItemsContainer.setSpacing(10.0);
     }
+
     public void handleLogout(ActionEvent actionEvent) {
-        SessionManager.clearSession(); // Clears the stored JWT token and user info
+        SessionManager.clearSession();
         navigateToScene((Node) actionEvent.getSource(), "opening-view.fxml", "SecondServe - Choose Your Role");
     }
 
@@ -99,17 +103,16 @@ public class KitchenMainController {
         foodItem.setDescription(notesArea.getText());
         foodItem.setExpiryDate(calculateExpiryDate(condition));
 
-        // --- 3. IMPORTANT: Convert UI text to the server's ENUM format ---
-        foodItem.setCategory(category.toUpperCase().replace(" ", "_")); // "Prepared Food" -> "PREPARED_FOOD"
-        foodItem.setCondition(condition.toUpperCase().replace(" ", "_")); // "Near Expiry" -> "NEAR_EXPIRY"
-        foodItem.setUnit("kg"); // Set a default unit for now
+        // --- 3. Convert UI text to the server's ENUM format ---
+        foodItem.setCategory(category.toUpperCase().replace(" ", "_"));
+        foodItem.setCondition(condition.toUpperCase().replace(" ", "_"));
+        foodItem.setUnit("kg");
 
         // --- 4. Send the Data to the Server Asynchronously ---
         sendDataToServer(foodItem);
     }
 
     private void sendDataToServer(FoodItemDto foodItem) {
-        // --- Get the authorization token from the session ---
         String authToken = SessionManager.getAuthToken();
         if (authToken == null) {
             showAlert("Authentication Error", "You are not logged in. Please restart the application.");
@@ -119,15 +122,14 @@ public class KitchenMainController {
         try {
             String requestBody = objectMapper.writeValueAsString(foodItem);
 
-            // --- Build the HTTP request with the Authorization header ---
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:8080/api/food-items"))
                     .header("Content-Type", "application/json")
-                    .header("Authorization", authToken) // Add the JWT token here
+                    .header("Authorization", authToken)
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
-            logLeftoverButton.setDisable(true); // Prevent double submission
+            logLeftoverButton.setDisable(true);
 
             httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenAccept(this::handleServerResponse)
@@ -142,17 +144,12 @@ public class KitchenMainController {
 
     private void handleServerResponse(HttpResponse<String> response) {
         Platform.runLater(() -> {
-            if (response.statusCode() == 201) { // 201 Created
+            if (response.statusCode() == 201) {
                 try {
-                    // STEP 1: Parse the full FoodItemDto object from the server's response
                     FoodItemDto createdItem = objectMapper.readValue(response.body(), FoodItemDto.class);
-
                     showAlert("Success", "Food item has been logged and is awaiting manager approval.");
-
-                    // STEP 2: Pass the complete object to the UI update method
                     updateLoggedItemsList(createdItem);
                     clearForm();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                     showAlert("Parsing Error", "Successfully logged item, but could not parse the server's response.");
@@ -163,7 +160,6 @@ public class KitchenMainController {
             logLeftoverButton.setDisable(false);
         });
     }
-
 
     private Void handleConnectionError(Throwable e) {
         Platform.runLater(() -> {
@@ -184,60 +180,73 @@ public class KitchenMainController {
     }
 
     private void updateLoggedItemsList(FoodItemDto newItem) {
-        if (isFirstItemLogged) {
-            todaysItemsContainer.getChildren().clear();
-            // Align items to the top instead of the center once there's content
-            todaysItemsContainer.setAlignment(javafx.geometry.Pos.TOP_CENTER);
-            isFirstItemLogged = false;
+        // Remove placeholder if it exists
+        if (placeholderLabel != null && todaysItemsContainer.getChildren().contains(placeholderLabel)) {
+            todaysItemsContainer.getChildren().remove(placeholderLabel);
         }
 
-        // Create the new detailed card and add it to the container
+        // Ensure container is aligned to top
+        todaysItemsContainer.setAlignment(javafx.geometry.Pos.TOP_LEFT);
+
+        // Create the new card and add it at the TOP (index 0) for newest-first display
         HBox itemCard = createLoggedItemCard(newItem);
-        todaysItemsContainer.getChildren().add(itemCard);
+        todaysItemsContainer.getChildren().add(0, itemCard);
+
+        // Debug output
+        System.out.println("Total items in container: " + todaysItemsContainer.getChildren().size());
+        System.out.println("Container spacing: " + todaysItemsContainer.getSpacing());
     }
 
-    // --- NEW HELPER METHOD ---
-    /**
-     * Creates a styled HBox to display the details of a logged food item.
-     */
-    // --- CORRECTED HELPER METHOD ---
-    /**
-     * Creates a styled HBox to display the details of a logged food item.
-     */
     private HBox createLoggedItemCard(FoodItemDto item) {
-        // VBox for the main text content (name, quantity, expiry)
-        VBox textContainer = new VBox(5.0); // 5px spacing between text elements
+        // VBox for the main text content
+        VBox textContainer = new VBox(5.0);
 
-        // Label for the food name (bold and larger)
+        // Food name label
         Label nameLabel = new Label(item.getFoodName());
         nameLabel.getStyleClass().add("item-name");
 
-        // Label for quantity and expiry details (smaller and grey)
+        // Quantity and expiry details
         DateTimeFormatter expiryFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
-        String details = String.format("Quantity: %.2f %s  |  Expires: %s",
+        String details = String.format("Quantity: %.2f %s  |  Category: %s  |  Expires: %s",
                 item.getQuantity(),
                 item.getUnit(),
+                formatEnumForDisplay(item.getCategory()),
                 item.getExpiryDate().format(expiryFormatter));
         Label detailsLabel = new Label(details);
         detailsLabel.getStyleClass().add("item-details");
 
         textContainer.getChildren().addAll(nameLabel, detailsLabel);
 
-        // A spacer to push the timestamp to the right
+        // Spacer to push timestamp to the right
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Label for the timestamp
-        // THIS IS THE LINE THAT WAS CAUSING THE CRASH. Corrected pattern is "hh:mm a"
+        // Timestamp label
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
         Label timestampLabel = new Label("Logged at " + item.getLoggedAt().format(timeFormatter));
         timestampLabel.getStyleClass().add("item-details");
 
-        // The main HBox container for the card
-        HBox card = new HBox(textContainer, spacer, timestampLabel);
+        // Main card container
+        HBox card = new HBox(15.0, textContainer, spacer, timestampLabel);
         card.getStyleClass().add("logged-item-card");
+        card.setPadding(new Insets(15, 20, 15, 20));
 
         return card;
+    }
+
+    // Helper method to convert enum values back to readable format
+    private String formatEnumForDisplay(String enumValue) {
+        if (enumValue == null) return "";
+        String[] words = enumValue.split("_");
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            if (word.length() > 0) {
+                result.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return result.toString().trim();
     }
 
     private void clearForm() {
@@ -249,8 +258,8 @@ public class KitchenMainController {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
         alert.setHeaderText(title);
         alert.setContentText(message);
         alert.showAndWait();

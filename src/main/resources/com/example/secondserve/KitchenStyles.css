@@ -1,7 +1,7 @@
 /* --- Global Styles --- */
 .root {
     -fx-font-family: "Segoe UI", Arial, sans-serif;
-    -fx-background-color: #f4f7fa; /* Light grey-blue background */
+    -fx-background-color: #f4f7fa;
 }
 
 /* --- Header Bar --- */
@@ -12,7 +12,7 @@
 }
 
 .app-title {
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
@@ -24,22 +24,22 @@
 
 .logout-button {
     -fx-background-color: transparent;
-    -fx-font-size: 20px;
-    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 14px;
+    -fx-text-fill: #c0392b;
+    -fx-font-weight: bold;
     -fx-cursor: hand;
 }
-.logout-button:hover {
-    -fx-text-fill: #2c3e50;
-}
 
+.logout-button:hover {
+    -fx-text-fill: #a93226;
+}
 
 /* --- Sidebar Navigation --- */
 .sidebar {
     -fx-background-color: #ffffff;
     -fx-pref-width: 240px;
     -fx-border-color: #e0e6ec;
-    -fx-border-width: 0 1 0 0;
-    -fx-padding: 20 0 0 0;
+    -fx-border-width: 0 1px 0 0;
 }
 
 .nav-button {
@@ -48,30 +48,28 @@
     -fx-font-size: 15px;
     -fx-pref-height: 50px;
     -fx-pref-width: 240px;
-    -fx-padding: 0 0 0 30px;
-    -fx-background-radius: 0;
     -fx-alignment: center-left;
     -fx-cursor: hand;
 }
 
 .nav-button:hover {
     -fx-background-color: #f8f9fa;
-    -fx-text-fill: #16a085;
 }
 
 .nav-button.active {
     -fx-background-color: #ecf0f1;
-    -fx-text-fill: #16a085;
     -fx-font-weight: bold;
+    -fx-border-color: #16a085;
+    -fx-border-width: 0 0 0 4px;
 }
 
 /* --- Main Content Area --- */
 .main-content {
-    -fx-padding: 40 50 40 50;
+    -fx-background-color: #f4f7fa;
 }
 
 .content-title {
-    -fx-font-size: 28px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
@@ -85,10 +83,9 @@
 .form-container {
     -fx-background-color: #ffffff;
     -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
     -fx-border-color: #e0e6ec;
-    -fx-padding: 30px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
 }
 
 .input-label {
@@ -97,119 +94,85 @@
     -fx-text-fill: #34495e;
 }
 
-.text-field, .text-area, .combo-box {
-    -fx-font-size: 14px;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #bdc3c7;
-    -fx-border-radius: 4px;
+.text-field, .combo-box, .text-area {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dfe4ea;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
     -fx-padding: 10px;
-}
-.text-area {
-    -fx-pref-height: 100px;
+    -fx-font-size: 14px;
 }
 
-.text-field:focused, .text-area:focused, .combo-box:focused {
+.text-field:focused, .combo-box:focused, .text-area:focused {
     -fx-border-color: #16a085;
     -fx-border-width: 2px;
 }
 
-.combo-box .list-cell {
-     -fx-font-size: 14px;
-}
-
-
-/* --- Submit Button --- */
 .submit-button {
     -fx-background-color: #16a085;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
+    -fx-padding: 12px 24px;
     -fx-background-radius: 5px;
-    -fx-pref-height: 50px;
     -fx-cursor: hand;
 }
 
 .submit-button:hover {
     -fx-background-color: #138d75;
 }
+
+.submit-button:disabled {
+    -fx-background-color: #95a5a6;
+    -fx-opacity: 0.6;
+}
+
+/* --- Section Title --- */
 .section-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
 
+/* --- Logged Items Container --- */
 .logged-items-container {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #f8f9fa;
     -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
     -fx-border-color: #e0e6ec;
-    -fx-padding: 30px;
-    -fx-min-height: 100px;
-    -fx-alignment: center; /* This centers the "No items" text */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
-}
-
-.placeholder-text {
-    -fx-font-size: 15px;
-    -fx-text-fill: #95a5a6; /* A soft grey for the placeholder */
-}
-.tip-card {
-    -fx-background-color: #ffffff;
-    -fx-padding: 20px;
-    -fx-background-radius: 8px;
     -fx-border-radius: 8px;
-    -fx-border-color: #e0e6ec;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
-}
-
-.tip-card-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #2c3e50;
-    -fx-padding: 0 0 10px 0; /* Space below the title */
-}
-
-.tip-list-item {
-    -fx-font-size: 14px;
-    -fx-text-fill: #34495e;
-}
-
-.tip-list-item .bullet {
-    -fx-fill: #3498db; /* Blue color for the bullet points */
-    -fx-font-size: 8px; /* Making the circle smaller */
-}
-/* --- Styles for the Logged Item Cards --- */
-
-/* Modify the existing container to align items to the top and add spacing */
-.logged-items-container {
-    -fx-alignment: top-center; /* Changed from 'center' */
-    -fx-spacing: 10px;       /* Add spacing between cards */
-}
-
-/* Style for the main card (the HBox) */
-.logged-item-card {
-    -fx-background-color: #f8f9fa; /* A very light grey */
     -fx-padding: 15px;
-    -fx-border-color: #e0e6ec;
-    -fx-border-width: 1px;
-    -fx-border-radius: 6px;
+}
+
+/* --- Individual Logged Item Card --- */
+.logged-item-card {
+    -fx-background-color: #ffffff;
     -fx-background-radius: 6px;
+    -fx-border-color: #e0e6ec;
+    -fx-border-radius: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 4, 0, 0, 1);
     -fx-alignment: center-left;
 }
 
 .logged-item-card:hover {
-    -fx-background-color: #f1f3f5;
+    -fx-border-color: #16a085;
+    -fx-effect: dropshadow(gaussian, rgba(22, 160, 133, 0.15), 8, 0, 0, 2);
 }
 
-/* Style for the main food item name */
 .item-name {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #2c3e50;
 }
 
-/* Style for the smaller details (quantity, expiry, timestamp) */
 .item-details {
     -fx-font-size: 13px;
-    -fx-text-fill: #7f8c8d; /* A secondary, softer text color */
+    -fx-text-fill: #7f8c8d;
+}
+
+/* --- Placeholder Text --- */
+.placeholder-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #95a5a6;
+    -fx-font-style: italic;
+    -fx-padding: 40px;
 }
