@@ -30,7 +30,7 @@
                 </HBox.margin>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Label styleClass="hotel-name" text="Grand Plaza Hotel" />
+            <Label styleClass="hotel-name" fx:id="hotelName" text="Hotel Name" />
             <Button fx:id="logoutButton" onAction="#handleLogout" mnemonicParsing="false"
                     styleClass="logout-button" text="Log Out">
                 <HBox.margin>

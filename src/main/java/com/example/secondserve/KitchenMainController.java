@@ -1,5 +1,6 @@
 package com.example.secondserve;
 
+import com.example.secondserve.dto.AuthResponse;
 import com.example.secondserve.dto.FoodItemDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,6 +36,7 @@ public class KitchenMainController {
     @FXML private Button logoutButton;
 
     // --- FXML UI Components ---
+    @FXML private Label hotelName;
     @FXML private TextField foodItemField;
     @FXML private TextField quantityField;
     @FXML private ComboBox<String> categoryComboBox;
@@ -51,11 +53,70 @@ public class KitchenMainController {
 
     @FXML
     public void initialize() {
+        objectMapper.registerModule(new JavaTimeModule());
+        AuthResponse session = SessionManager.getSession();
+        if (session != null) {
+
+            // Use getOrganizationName() instead of getName()
+            hotelName.setText(session.getOrganizationName());
+        }
         categoryComboBox.setItems(FXCollections.observableArrayList("Prepared Food", "Ingredients"));
         conditionComboBox.setItems(FXCollections.observableArrayList("Fresh", "Good", "Near Expiry"));
 
         // Set proper spacing for the container
         todaysItemsContainer.setSpacing(10.0);
+
+        // Load today's logged items from server
+        loadTodaysItems();
+    }
+
+    private void loadTodaysItems() {
+        String authToken = SessionManager.getAuthToken();
+        if (authToken == null) return;
+
+        Long hotelId = SessionManager.getSession() != null ? SessionManager.getSession().getUserId() : null;
+        if (hotelId == null) return;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/food-items/hotel/" + hotelId + "/today"))
+                .header("Authorization", authToken)
+                .GET()
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(this::handleTodaysItemsResponse)
+                .exceptionally(e -> {
+                    Platform.runLater(() -> System.out.println("Could not load today's items: " + e.getMessage()));
+                    return null;
+                });
+    }
+
+    private void handleTodaysItemsResponse(HttpResponse<String> response) {
+        Platform.runLater(() -> {
+            if (response.statusCode() == 200) {
+                try {
+                    com.fasterxml.jackson.core.type.TypeReference<java.util.List<FoodItemDto>> typeRef =
+                            new com.fasterxml.jackson.core.type.TypeReference<java.util.List<FoodItemDto>>() {};
+                    java.util.List<FoodItemDto> items = objectMapper.readValue(response.body(), typeRef);
+
+                    if (items != null && !items.isEmpty()) {
+                        // Remove placeholder
+                        if (placeholderLabel != null) {
+                            todaysItemsContainer.getChildren().remove(placeholderLabel);
+                        }
+                        todaysItemsContainer.setAlignment(javafx.geometry.Pos.TOP_LEFT);
+
+                        // Add all items (newest first)
+                        for (FoodItemDto item : items) {
+                            HBox card = createLoggedItemCard(item);
+                            todaysItemsContainer.getChildren().add(card);
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error parsing today's items: " + e.getMessage());
+                }
+            }
+        });
     }
 
     public void handleLogout(ActionEvent actionEvent) {
