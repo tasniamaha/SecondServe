@@ -164,3 +164,36 @@
 .add-to-donations-button:hover {
     -fx-background-color: #138d75;
 }
+.leftover-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.leftover-details {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.approve-button, .reject-button {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+
+.approve-button {
+    -fx-background-color: #27ae60; /* Green */
+}
+.approve-button:hover {
+    -fx-background-color: #229954;
+}
+
+.reject-button {
+    -fx-background-color: #e74c3c; /* Red */
+}
+.reject-button:hover {
+    -fx-background-color: #c0392b;
+}

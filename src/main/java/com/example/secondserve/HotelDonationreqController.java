@@ -32,9 +32,6 @@ public class HotelDonationreqController {
 
     // --- FXML UI Components ---
     @FXML private VBox requestsContainer;
-    @FXML private Label hotelNameLabel;
-    @FXML private Button profileButton;
-    @FXML private Button requestsButton;
 
     // --- API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -42,9 +39,7 @@ public class HotelDonationreqController {
 
     @FXML
     public void initialize() {
-        if (SessionManager.getSession() != null) {
-            hotelNameLabel.setText(SessionManager.getSession().getName());
-        }
+
         loadPendingRequests();
     }
 
@@ -83,7 +78,7 @@ public class HotelDonationreqController {
     }
 
     private void displayRequests(List<FoodRequestDto> requests) {
-        // ... (this method is correct, no changes needed)
+
         requestsContainer.getChildren().clear();
         if (requests == null || requests.isEmpty()) {
             Label placeholder = new Label("There are no pending donation requests at this time.");
@@ -98,7 +93,7 @@ public class HotelDonationreqController {
     }
 
     private HBox createRequestCard(FoodRequestDto request) {
-        // ... (this method is correct, no changes needed)
+
         VBox textContainer = new VBox(5.0);
         Label ngoNameLabel = new Label(request.getNgoName());
         ngoNameLabel.getStyleClass().add("ngo-name");
@@ -137,7 +132,7 @@ public class HotelDonationreqController {
     }
 
     private void updateRequestStatus(FoodRequestDto requestDto, String action, HBox cardNode) {
-        // ... (this method is correct, no changes needed)
+
         String authToken = SessionManager.getAuthToken();
         if (authToken == null) return;
         HttpRequest request = HttpRequest.newBuilder()
@@ -174,7 +169,7 @@ public class HotelDonationreqController {
 
     @FXML
     public void handleShowRequests(ActionEvent actionEvent) {
-        // Since this is the current view, we just refresh the data.
+
         loadPendingRequests();
     }
 
@@ -187,13 +182,13 @@ public class HotelDonationreqController {
     }
 
     private Void handleConnectionError(Throwable e) {
-        // ... (this method is correct, no changes needed)
+
         Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Connection Error", "Could not connect to the server."));
         return null;
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
-        // ... (this method is correct, no changes needed)
+
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(title);

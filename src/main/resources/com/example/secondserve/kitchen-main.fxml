@@ -12,11 +12,13 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root" stylesheets="@KitchenStyles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.KitchenMainController">
+<BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root" stylesheets="@KitchenStyles.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.secondserve.KitchenMainController">
 
-    <!-- TOP: Header Bar (Unchanged) -->
+    <!-- TOP: Header Bar -->
     <top>
-        <HBox alignment="CENTER_LEFT" styleClass="header-bar" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER_LEFT" styleClass="header-bar">
             <padding>
                 <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
             </padding>
@@ -27,8 +29,9 @@
                 </HBox.margin>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Label styleClass="hotel-name" text="grand plaza hotel" />
-            <Button fx:id="logout" onAction="handleLogout" mnemonicParsing="false" styleClass="logout-button" text="log out">
+            <Label styleClass="hotel-name" text="Grand Plaza Hotel" />
+            <Button fx:id="logoutButton" onAction="#handleLogout" mnemonicParsing="false"
+                    styleClass="logout-button" text="Log Out">
                 <HBox.margin>
                     <Insets left="15.0" />
                 </HBox.margin>
@@ -36,24 +39,25 @@
         </HBox>
     </top>
 
-    <!-- LEFT: Sidebar Navigation (Simplified) -->
+    <!-- LEFT: Sidebar Navigation -->
     <left>
-        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+        <VBox styleClass="sidebar">
             <padding>
                 <Insets top="20.0" />
             </padding>
-            <!-- Only the "Log Leftovers" button remains -->
-            <Button fx:id="logLeftoversButton" alignment="BASELINE_LEFT" graphicTextGap="15.0" mnemonicParsing="false" styleClass="nav-button, active" text="Log Leftovers" />
+            <Button fx:id="logLeftoversButton" alignment="BASELINE_LEFT" graphicTextGap="15.0"
+                    mnemonicParsing="false" styleClass="nav-button, active" text="Log Leftovers" />
         </VBox>
     </left>
 
-    <!-- CENTER: Main Content Area (Simplified) -->
+    <!-- CENTER: Main Content Area -->
     <center>
-        <!-- The StackPane has been removed, leaving only the main content VBox -->
         <VBox fx:id="logLeftoversView" styleClass="main-content">
             <padding>
                 <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
             </padding>
+
+            <!-- Page Title and Subtitle -->
             <Label styleClass="content-title" text="Log Leftover Food" />
             <Label styleClass="content-subtitle" text="Record leftover food items and ingredients from today's service">
                 <VBox.margin>
@@ -61,60 +65,70 @@
                 </VBox.margin>
             </Label>
 
-            <!-- The Form Container remains exactly the same -->
+            <!-- Form Container -->
             <VBox styleClass="form-container">
-                <!-- All form elements (TextFields, ComboBoxes, etc.) are here -->
-                <!-- ... -->
                 <padding>
                     <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                 </padding>
+
+                <!-- Food Item and Quantity Row -->
                 <HBox spacing="20.0">
                     <VBox HBox.hgrow="ALWAYS" spacing="5.0">
                         <Label styleClass="input-label" text="Food Item" />
                         <TextField fx:id="foodItemField" promptText="e.g., Grilled Chicken" styleClass="text-field" />
                     </VBox>
-                    <VBox prefWidth="200" spacing="5.0">
+                    <VBox prefWidth="200.0" spacing="5.0">
                         <Label styleClass="input-label" text="Quantity (kg)" />
-                        <TextField fx:id="quantityField" promptText="0" styleClass="text-field" />
+                        <TextField fx:id="quantityField" promptText="0.0" styleClass="text-field" />
                     </VBox>
                 </HBox>
+
+                <!-- Category Selection -->
                 <VBox spacing="5.0">
                     <Label styleClass="input-label" text="Category" />
-                    <ComboBox fx:id="categoryComboBox" maxWidth="1.7976931348623157E308" promptText="Select category" styleClass="combo-box" />
+                    <ComboBox fx:id="categoryComboBox" maxWidth="Infinity" promptText="Select category" styleClass="combo-box" />
                     <VBox.margin>
                         <Insets top="15.0" />
                     </VBox.margin>
                 </VBox>
+
+                <!-- Condition Selection -->
                 <VBox spacing="5.0">
                     <Label styleClass="input-label" text="Condition" />
-                    <ComboBox fx:id="conditionComboBox" maxWidth="1.7976931348623157E308" promptText="Select condition" styleClass="combo-box" />
+                    <ComboBox fx:id="conditionComboBox" maxWidth="Infinity" promptText="Select condition" styleClass="combo-box" />
                     <VBox.margin>
                         <Insets top="15.0" />
                     </VBox.margin>
                 </VBox>
+
+                <!-- Notes Section -->
                 <VBox spacing="5.0">
                     <Label styleClass="input-label" text="Notes (Optional)" />
-                    <TextArea fx:id="notesArea" prefRowCount="4" promptText="Additional notes about the item..." styleClass="text-area" wrapText="true" />
+                    <TextArea fx:id="notesArea" prefRowCount="4" promptText="Additional notes about the item..."
+                              styleClass="text-area" wrapText="true" />
                     <VBox.margin>
                         <Insets top="15.0" />
                     </VBox.margin>
                 </VBox>
-                <Button fx:id="logLeftoverButton" onAction="#handleLogLeftoverItem" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" text="Log Leftover Item">
+
+                <!-- Submit Button -->
+                <Button fx:id="logLeftoverButton" onAction="#handleLogLeftoverItem" maxWidth="Infinity"
+                        mnemonicParsing="false" styleClass="submit-button" text="Log Leftover Item">
                     <VBox.margin>
                         <Insets top="30.0" />
                     </VBox.margin>
                 </Button>
 
-                <!-- "Today's Logged Items" section is unchanged -->
+                <!-- Today's Logged Items Section -->
                 <Label styleClass="section-title" text="Today's Logged Items">
                     <VBox.margin>
                         <Insets bottom="10.0" top="40.0" />
                     </VBox.margin>
                 </Label>
+
+                <!-- Container for logged items -->
                 <VBox fx:id="todaysItemsContainer" alignment="CENTER" styleClass="logged-items-container">
-                    <children>
-                        <Label styleClass="placeholder-text" text="No items logged today." />
-                    </children>
+                    <Label fx:id="placeholderLabel" styleClass="placeholder-text" text="No items logged today." />
                 </VBox>
             </VBox>
         </VBox>

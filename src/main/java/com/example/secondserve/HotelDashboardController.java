@@ -1,22 +1,29 @@
 package com.example.secondserve;
 
+import com.example.secondserve.dto.FoodItemDto;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.example.secondserve.dto.AuthResponse;
 import com.example.secondserve.dto.DashboardStatsDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.util.List;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -25,7 +32,7 @@ import java.net.http.HttpResponse;
 import java.util.Objects;
 
 public class HotelDashboardController {
-
+    private Timeline refreshTimeline;
     // --- FXML UI Components ---
     @FXML private BorderPane mainBorderPane;
     @FXML private Label donatedValueLabel;
@@ -45,10 +52,10 @@ public class HotelDashboardController {
 
     @FXML
     public void initialize() {
-        // Store the initial dashboard content before we navigate away from it.
+        objectMapper.registerModule(new JavaTimeModule());
         AuthResponse session = SessionManager.getSession();
         if (session != null) {
-            // --- THIS IS THE CORRECTED LINE ---
+
             // Use getOrganizationName() instead of getName()
             hotelName.setText(session.getOrganizationName());
         }
@@ -60,6 +67,19 @@ public class HotelDashboardController {
         // Asynchronously load dynamic data from the server.
         loadDashboardStats();
         loadPendingLeftovers();
+        setupAutoRefresh();
+    }
+
+    private void setupAutoRefresh() {
+        refreshTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(30), event -> {
+                    System.out.println("Auto-refreshing dashboard...");
+                    loadDashboardStats();
+                    loadPendingLeftovers();
+                })
+        );
+        refreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        refreshTimeline.play();
     }
 
     /**
@@ -103,7 +123,7 @@ public class HotelDashboardController {
     private void loadDashboardStats() {
         String authToken = SessionManager.getAuthToken();
         if (authToken == null) {
-            showAlert("Authentication Error", "You are not logged in.");
+
             return;
         }
 
@@ -137,16 +157,127 @@ public class HotelDashboardController {
     }
 
     private void loadPendingLeftovers() {
-        // This is where you will call your server to get the list of leftovers that have is_available = false.
-        // For each item, you will dynamically create an HBox "card" and add it to the newLeftoversContainer.
-        // Example: newLeftoversContainer.getChildren().add(createLeftoverCard(item));
-        System.out.println("Fetching pending leftovers from the server...");
+        String authToken = SessionManager.getAuthToken();
+        Long hotelId = SessionManager.getHotelId(); // This method now exists and works
+        if (authToken == null || hotelId == null) {
+            System.err.println("Not logged in or hotelId is null. Cannot fetch leftovers.");
+            return;
+        }
+
+        // We use the new endpoint created on the server
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/food-items/hotel/" + hotelId + "/pending"))
+                .header("Authorization", authToken)
+                .GET()
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(this::handleLeftoversResponse)
+                .exceptionally(this::handleConnectionError);
+    }
+
+    private void handleLeftoversResponse(HttpResponse<String> response) {
+        Platform.runLater(() -> {
+            if (response.statusCode() == 200) {
+                try {
+                    // Use a TypeReference to parse a List of objects
+                    List<FoodItemDto> pendingItems = objectMapper.readValue(response.body(), new TypeReference<List<FoodItemDto>>() {});
+                    updateLeftoversUI(pendingItems);
+                } catch (IOException e) {
+                    System.err.println("Error parsing pending leftovers JSON: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("Failed to fetch pending leftovers. Status: " + response.statusCode());
+            }
+        });
+    }
+
+    private void updateLeftoversUI(List<FoodItemDto> pendingItems) {
+        newLeftoversContainer.getChildren().clear(); // Clear old items
+
+        if (pendingItems.isEmpty()) {
+            Label placeholder = new Label("No new leftovers are awaiting review.");
+            placeholder.getStyleClass().add("placeholder-text");
+            newLeftoversContainer.getChildren().add(placeholder);
+        } else {
+            for (FoodItemDto item : pendingItems) {
+                newLeftoversContainer.getChildren().add(createLeftoverCard(item));
+            }
+        }
+    }
+
+    private HBox createLeftoverCard(FoodItemDto item) {
+        HBox card = new HBox(10);
+        card.setAlignment(Pos.CENTER_LEFT);
+        card.getStyleClass().add("leftover-card"); // For CSS styling
+
+        Label nameLabel = new Label(item.getFoodName());
+        nameLabel.setMinWidth(200);
+        nameLabel.getStyleClass().add("leftover-name");
+
+        Label quantityLabel = new Label(String.format("%.2f %s", item.getQuantity(), item.getUnit()));
+        quantityLabel.setMinWidth(120);
+        quantityLabel.getStyleClass().add("leftover-details");
+
+        Label expiryLabel = new Label("Expires: " + item.getExpiryDate().toString());
+        expiryLabel.getStyleClass().add("leftover-details");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button approveButton = new Button("Approve");
+        approveButton.getStyleClass().add("approve-button");
+        approveButton.setOnAction(e -> handleApprove(item.getId()));
+
+        Button rejectButton = new Button("Reject");
+        rejectButton.getStyleClass().add("reject-button");
+        rejectButton.setOnAction(e -> handleReject(item.getId()));
+
+        card.getChildren().addAll(nameLabel, quantityLabel, expiryLabel, spacer, approveButton, rejectButton);
+        return card;
+    }
+
+    private void handleReject(Long foodItemId) {
+        String authToken = SessionManager.getAuthToken();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/food-items/" + foodItemId))
+                .header("Authorization", authToken)
+                .DELETE() // DELETE request
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    if (response.statusCode() == 204) { // 204 No Content is success for DELETE
+                        Platform.runLater(this::loadPendingLeftovers); // Refresh the list
+                    } else {
+                        System.err.println("Failed to reject item. Status: " + response.statusCode());
+                    }
+                });
+    }
+
+    private void handleApprove(Long foodItemId) {
+        String authToken = SessionManager.getAuthToken();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/food-items/" + foodItemId + "/approve"))
+                .header("Authorization", authToken)
+                .PUT(HttpRequest.BodyPublishers.noBody()) // PUT request
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    if (response.statusCode() == 200) {
+                        Platform.runLater(this::loadPendingLeftovers); // Refresh the list on success
+                    } else {
+                        System.err.println("Failed to approve item. Status: " + response.statusCode());
+                    }
+                });
     }
 
     private Void handleConnectionError(Throwable e) {
         Platform.runLater(() -> {
             System.err.println("Connection Error: " + e.getMessage());
-            showAlert("Connection Error", "Could not connect to the server.");
+            //showAlert("Connection Error", "Could not connect to the server.");
         });
         return null;
     }

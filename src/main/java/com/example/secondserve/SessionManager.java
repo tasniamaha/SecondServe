@@ -24,4 +24,11 @@ public class SessionManager {
     public static void clearSession() {
         currentSession = null;
     }
+    public static Long getHotelId() {
+
+        if (currentSession != null && "HOTEL_MANAGER".equals(currentSession.getUserType())) {
+            return currentSession.getUserId(); // The userId IS the hotelId in this context
+        }
+        return null; // Return null if not logged in or not a hotel manager
+    }
 }

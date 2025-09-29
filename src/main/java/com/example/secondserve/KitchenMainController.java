@@ -31,7 +31,8 @@ import java.util.Objects;
 
 public class KitchenMainController {
 
-    @FXML private Button logout;
+    @FXML private Button logoutButton;
+
     // --- FXML UI Components ---
     @FXML private TextField foodItemField;
     @FXML private TextField quantityField;
