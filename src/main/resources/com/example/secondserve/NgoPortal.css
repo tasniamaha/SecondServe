@@ -257,3 +257,50 @@
     -fx-padding: 5px 15px;
     -fx-background-radius: 5px;
 }
+.hotel-card {
+    -fx-background-color: #ffffff; /* White background to stand out */
+    -fx-padding: 20px 25px;         /* Generous internal spacing */
+    -fx-background-radius: 8px;    /* Matches your other container rounding */
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-border-color: #e9ecef;     /* Subtle border, consistent with header */
+
+    /* This is the key for a modern "lifted" look */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0.1, 0, 2);
+
+    /* Smooth transition for the hover effect */
+    -fx-transition: -fx-effect 0.2s ease-in-out;
+}
+
+/* Make the card lift even more on hover to show it's interactive */
+.hotel-card:hover {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 15, 0.2, 0, 4);
+}
+
+/* Style for the main hotel name */
+.hotel-card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #343a40; /* Dark text for high contrast */
+}
+
+/* A new style for secondary details like the address */
+.hotel-card-details {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6c757d; /* Lighter grey for secondary info */
+}
+
+/* Style for the "View" button to make it a clear call-to-action */
+.view-details-button {
+    -fx-background-color: #16a085; /* A pleasant green, consistent with your other buttons */
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 18px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+.view-details-button:hover {
+    -fx-background-color: #138d75; /* A slightly darker shade on hover */
+}

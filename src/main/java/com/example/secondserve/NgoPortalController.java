@@ -1,13 +1,18 @@
 package com.example.secondserve;
 
+import com.example.secondserve.dto.AuthResponse;
 import com.example.secondserve.dto.HotelDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +22,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -27,6 +34,9 @@ import java.util.Objects;
 
 public class NgoPortalController {
 
+    @FXML private Button logoutButton;
+    @FXML private Label NGO_name;
+    @FXML private VBox hotelCardsContainer;
     @FXML private BorderPane mainBorderPane;
     @FXML private Button browseHotelsButton;
     @FXML private Button myRequestsButton;
@@ -39,6 +49,13 @@ public class NgoPortalController {
 
     @FXML
     public void initialize() {
+        objectMapper.registerModule(new JavaTimeModule());
+        AuthResponse session = SessionManager.getSession();
+        if (session != null) {
+
+            // Use getOrganizationName() instead of getName()
+            NGO_name.setText(session.getOrganizationName());
+        }
         this.initialBrowseView = mainBorderPane.getCenter();
         setActiveButton(browseHotelsButton);
         loadHotelsList(); // Call the simplified data loading method
@@ -90,14 +107,6 @@ public class NgoPortalController {
     }
 
     private void displayHotelCards(List<HotelDto> hotels) {
-        // Find the VBox container inside the initially loaded view
-        VBox hotelCardsContainer;
-        if (mainBorderPane.getCenter() instanceof VBox) {
-            Node lookup = mainBorderPane.getCenter().lookup(".content-container");
-            if(lookup instanceof VBox) {
-                hotelCardsContainer = (VBox) lookup;
-            } else return;
-        } else return;
 
         hotelCardsContainer.getChildren().clear(); // Clear placeholder or old cards
 
@@ -113,22 +122,39 @@ public class NgoPortalController {
         }
     }
 
-    /**
-     * MODIFIED: Creates a simpler card with just the hotel name, per your suggestion.
-     */
+
+    // In: NgoPortalController.java
+
     private HBox createHotelCard(HotelDto hotel) {
+        // 1. Hotel Name (Title)
         Label nameLabel = new Label(hotel.getHotelName());
         nameLabel.getStyleClass().add("hotel-card-title");
 
+        // 2. Hotel Location Details (New)
+        // Combines city and state for a cleaner look. Handles nulls gracefully.
+        String location = (hotel.getCity() != null ? hotel.getCity() : "") +
+                (hotel.getState() != null ? ", " + hotel.getState() : "");
+        Label detailsLabel = new Label(location);
+        detailsLabel.getStyleClass().add("hotel-card-details");
+
+        // 3. Vertical container for the text
+        VBox textContainer = new VBox(5, nameLabel, detailsLabel); // 5px spacing between title and details
+        textContainer.setAlignment(Pos.CENTER_LEFT);
+
+        // 4. Spacer to push the button to the right
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // 5. The "View" button
         Button viewButton = new Button("View Available Food");
         viewButton.getStyleClass().add("view-details-button");
         viewButton.setOnAction(event -> navigateToHotelDetails(hotel.getId()));
 
-        HBox card = new HBox(nameLabel, spacer, viewButton);
-        card.getStyleClass().add("hotel-card");
+        // 6. The main HBox for the card
+        HBox card = new HBox(textContainer, spacer, viewButton);
+        card.getStyleClass().add("hotel-card"); // This class now has styles!
+        card.setAlignment(Pos.CENTER); // Vertically align content in the card
+
         return card;
     }
 
@@ -153,4 +179,35 @@ public class NgoPortalController {
     }
 
     private void showAlert(String title, String message) { /* ... (Unchanged) ... */ }
+
+    public void handleLogout(ActionEvent actionEvent) {
+        // 1. Clear the stored session data
+        SessionManager.clearSession();
+
+        // 2. Navigate back to the Login screen
+        navigateToLogin();
+    }
+
+    private void navigateToLogin() {
+        try {
+            // Load the LoginView.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/secondserve/opening-view.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage (window) from any node in the current scene
+            Stage stage = (Stage) mainBorderPane.getScene().getWindow();
+
+            // Create a new scene with the login view
+            Scene scene = new Scene(root);
+
+            // Set the new scene on the stage and show it
+            stage.setScene(scene);
+            stage.setTitle("SecondServe - Login"); // Optional: Reset the window title
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Navigation Error", "Could not load the login screen.");
+        }
+    }
 }

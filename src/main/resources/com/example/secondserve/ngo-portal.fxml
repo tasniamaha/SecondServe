@@ -24,8 +24,8 @@
                 </HBox.margin>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="NGO_name" styleClass="user-name" text="Shohay" />
-            <Button mnemonicParsing="false" styleClass="logout-button" text="Log Out">
+            <Label fx:id="NGO_name" styleClass="user-name" text="ngo_name" />
+            <Button fx:id="logoutButton" onAction="#handleLogout" mnemonicParsing="false" styleClass="logout-button" text="Log Out">
                 <HBox.margin>
                     <Insets left="15.0" />
                 </HBox.margin>
@@ -62,7 +62,7 @@
                     <Insets bottom="20.0" />
                 </VBox.margin>
             </Label>
-            <VBox alignment="CENTER" styleClass="content-container">
+            <VBox alignment="CENTER" fx:id="hotelCardsContainer" styleClass="content-container" spacing="20">
                 <children>
                     <Label styleClass="placeholder-text" text="No hotels with available food donations at this time." />
                 </children>
