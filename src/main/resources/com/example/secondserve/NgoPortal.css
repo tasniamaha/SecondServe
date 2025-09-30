@@ -304,3 +304,22 @@
 .view-details-button:hover {
     -fx-background-color: #138d75; /* A slightly darker shade on hover */
 }
+.complete-button {
+    -fx-background-color: #3498db; /* A distinct blue color */
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+.complete-button:hover {
+    -fx-background-color: #2980b9; /* Darker blue on hover */
+}
+
+
+/* A style for COMPLETED, as it's a logical final state */
+.status-completed {
+    -fx-background-color: #cff4fc; /* Light Blue */
+    -fx-text-fill: #055160;
+}

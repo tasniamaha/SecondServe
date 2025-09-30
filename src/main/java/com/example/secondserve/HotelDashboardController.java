@@ -284,10 +284,27 @@ public class HotelDashboardController {
 
     // --- Navigation and Helper Methods ---
 
+    // In HotelDashboardController.java
+
     private void loadViewIntoCenter(String fxmlFile) {
         try {
-            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/secondserve/" + fxmlFile)));
+            // 1. Create a new FXMLLoader instance instead of using the static method
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/example/secondserve/" + fxmlFile)));
+
+            // 2. Load the view from the FXML file
+            Parent view = loader.load();
+
+            // 3. Get the controller instance from the loader
+            Object controller = loader.getController();
+
+            // 4. Check if the loaded controller is the one that needs the BorderPane reference
+            if (controller instanceof HotelDonationreqController) {
+                // If it is, cast it and pass the mainBorderPane reference
+                ((HotelDonationreqController) controller).setMainBorderPane(mainBorderPane);
+            }
+            // 5. Finally, set the loaded view into the center of the dashboard
             mainBorderPane.setCenter(view);
+
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Navigation Error", "Could not load the view: " + fxmlFile);

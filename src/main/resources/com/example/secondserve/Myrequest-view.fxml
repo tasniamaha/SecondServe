@@ -24,10 +24,12 @@
         <!-- The TableView is the core component for displaying the requests -->
         <TableView fx:id="requestsTableView" styleClass="table-view" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="hotelNameColumn" text="Hotel Name" prefWidth="250.0" />
-                <TableColumn fx:id="foodItemColumn" text="Food Item" prefWidth="200.0" />
-                <TableColumn fx:id="dateColumn" text="Date Requested" prefWidth="150.0" />
-                <TableColumn fx:id="statusColumn" text="Status" prefWidth="120.0" />
+                <TableColumn fx:id="hotelNameColumn" text="Hotel Name" prefWidth="200.0" minWidth="150.0" />
+                <TableColumn fx:id="foodItemColumn" text="Food Item" prefWidth="200.0" minWidth="150.0" />
+                <TableColumn fx:id="quantityColumn" text="Quantity" prefWidth="120.0" minWidth="100.0" />
+                <TableColumn fx:id="dateColumn" text="Date Requested" prefWidth="150.0" minWidth="120.0" />
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="120.0" minWidth="100.0" />
+                <TableColumn fx:id="actionColumn"  prefWidth="120.0" minWidth="100.0" />
             </columns>
 
             <placeholder>

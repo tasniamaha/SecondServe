@@ -2,6 +2,7 @@ package com.example.secondserve;
 
 import com.example.secondserve.dto.NgoDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.Node;
 
 import java.io.IOException;
 import java.net.URI;
@@ -30,11 +30,11 @@ public class NgoDetailsController {
     @FXML private Label licenseLabel;
 
     // --- For Navigation ---
-    private BorderPane mainBorderPane; // A reference to the main dashboard's BorderPane
+    private BorderPane mainBorderPane;
 
     // --- For API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     private long ngoId;
 
@@ -61,7 +61,6 @@ public class NgoDetailsController {
             return;
         }
 
-        // This is the endpoint to get a single NGO by their ID.
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/ngos/" + this.ngoId))
                 .header("Authorization", authToken)
@@ -77,9 +76,7 @@ public class NgoDetailsController {
         Platform.runLater(() -> {
             if (response.statusCode() == 200) {
                 try {
-                    // Convert the JSON response into our NgoDto object
                     NgoDto ngo = objectMapper.readValue(response.body(), NgoDto.class);
-                    // Populate the UI with the data from the DTO
                     populateLabels(ngo);
                 } catch (IOException e) {
                     showAlert("Application Error", "Failed to parse NGO details from the server.");
@@ -119,10 +116,15 @@ public class NgoDetailsController {
     @FXML
     public void handleGoBack(ActionEvent actionEvent) {
         try {
-            // Reload the requests view. A more advanced app might pass a reference to the
-            // previous controller, but reloading is simpler and reliable.
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/secondserve/DonationRequestsView.fxml"));
+            // Load the requests view
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("HotelManager_DonationReq.fxml"));
             Parent requestsView = loader.load();
+
+            // Get the controller and set the BorderPane reference
+            HotelDonationreqController controller = loader.getController();
+            controller.setMainBorderPane(mainBorderPane);
+
+            // Navigate back
             mainBorderPane.setCenter(requestsView);
         } catch (IOException e) {
             e.printStackTrace();

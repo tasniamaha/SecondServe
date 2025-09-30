@@ -25,6 +25,7 @@ public class FoodItemDto {
 
     @JsonProperty("createdDate") // Map server's "createdDate" to this field
     private LocalDateTime loggedAt;
+    private String currentUserRequestStatus;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -62,4 +63,12 @@ public class FoodItemDto {
 
     public LocalDateTime getLoggedAt() { return loggedAt; }
     public void setLoggedAt(LocalDateTime loggedAt) { this.loggedAt = loggedAt; }
+
+    public String getCurrentUserRequestStatus() {
+        return currentUserRequestStatus;
+    }
+
+    public void setCurrentUserRequestStatus(String currentUserRequestStatus) {
+        this.currentUserRequestStatus = currentUserRequestStatus;
+    }
 }

@@ -7,19 +7,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class HotelDonationViewController {
@@ -28,7 +27,7 @@ public class HotelDonationViewController {
     @FXML private Label hotelNameSubtitle, hotelNameLabel, hotelAddressLabel, hotelContactLabel;
     @FXML private TableView<FoodItemDto> foodItemsTableView;
     @FXML private TableColumn<FoodItemDto, String> itemNameColumn;
-    @FXML private TableColumn<FoodItemDto, String> quantityColumn; // Display as String for formatting
+    @FXML private TableColumn<FoodItemDto, String> quantityColumn;
     @FXML private TableColumn<FoodItemDto, String> conditionColumn;
     @FXML private TableColumn<FoodItemDto, LocalDate> expiryDateColumn;
     @FXML private TableColumn<FoodItemDto, Void> requestColumn;
@@ -36,7 +35,7 @@ public class HotelDonationViewController {
     private long hotelId;
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    private NgoPortalController mainPortalController; // To handle "back" navigation
+    private NgoPortalController mainPortalController;
 
     /**
      * Called by the main portal controller to pass in data and a reference to itself.
@@ -50,32 +49,49 @@ public class HotelDonationViewController {
     }
 
     private void setupTableColumns() {
+        // FIXED: Changed PropertyValue to PropertyValueFactory
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("foodName"));
         conditionColumn.setCellValueFactory(new PropertyValueFactory<>("condition"));
         expiryDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
 
         // Custom cell factory to format quantity with its unit
         quantityColumn.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(
+                new SimpleStringProperty(
                         cellData.getValue().getQuantity() + " " + cellData.getValue().getUnit()
                 )
         );
 
-        // --- The CellFactory for the dynamic "Request" button ---
+        // Dynamic Action button based on request status
         requestColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button btn = new Button("Request");
-            {
-                btn.getStyleClass().add("request-button");
-                btn.setOnAction(event -> {
-                    FoodItemDto foodItem = getTableView().getItems().get(getIndex());
-                    handleRequestItem(foodItem, btn); // Pass the button itself
-                });
-            }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : btn);
+
+                if (empty || getIndex() >= getTableView().getItems().size()) {
+                    setGraphic(null);
+                    return;
+                }
+
+                // Get the FoodItemDto for the current row
+                FoodItemDto foodItem = getTableView().getItems().get(getIndex());
+                String status = foodItem.getCurrentUserRequestStatus();
+
+                // Check if there is already an active request for this item
+                if ("PENDING".equals(status) || "APPROVED".equals(status)) {
+                    // Create a disabled button showing the status
+                    Button statusButton = new Button(status);
+                    statusButton.setDisable(true);
+                    statusButton.getStyleClass().add("pending-button");
+                    setGraphic(statusButton);
+                } else {
+                    // Create the clickable "Request" button
+                    Button requestButton = new Button("Request");
+                    requestButton.getStyleClass().add("request-button");
+                    requestButton.setOnAction(event -> {
+                        handleRequestItem(foodItem, requestButton);
+                    });
+                    setGraphic(requestButton);
+                }
             }
         });
     }
@@ -109,14 +125,14 @@ public class HotelDonationViewController {
             httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                     .thenAccept(response -> Platform.runLater(() -> {
                         if (response.statusCode() == 201) { // 201 Created
-                            // --- SUCCESS: Update the UI to show "Pending" ---
-                            button.setText("Pending");
+                            // SUCCESS: Update the UI to show "Pending"
+                            button.setText("PENDING");
                             button.getStyleClass().remove("request-button");
                             button.getStyleClass().add("pending-button");
                         } else {
-                            // The request failed (e.g., item was just taken)
+                            // The request failed
                             showAlert("Request Failed", "This item might no longer be available. Please refresh the list.");
-                            button.setDisable(false); // Re-enable the button on failure
+                            button.setDisable(false);
                         }
                     })).exceptionally(e -> {
                         // Handle network failure
@@ -131,11 +147,8 @@ public class HotelDonationViewController {
         }
     }
 
-    // Paste these full methods into your HotelDonationViewController.java file
-
     /**
-     * Fetches the public details of the selected hotel from the server and populates the
-     * top information card in the UI.
+     * Fetches the public details of the selected hotel from the server.
      */
     private void loadHotelDetails() {
         String authToken = SessionManager.getAuthToken();
@@ -144,24 +157,19 @@ public class HotelDonationViewController {
             return;
         }
 
-        // Build the request to get a specific hotel's details
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/hotels/" + this.hotelId))
                 .header("Authorization", authToken)
                 .GET()
                 .build();
 
-        // Send the request asynchronously
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
-                    // When the server responds, update the UI on the JavaFX Application Thread
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
                             try {
-                                // Convert the JSON response into a HotelDto object
                                 HotelDto hotel = objectMapper.readValue(response.body(), HotelDto.class);
 
-                                // Update the UI labels with the fetched data
                                 hotelNameSubtitle.setText("From " + hotel.getHotelName());
                                 hotelNameLabel.setText(hotel.getHotelName());
                                 hotelAddressLabel.setText(hotel.getAddress());
@@ -179,31 +187,24 @@ public class HotelDonationViewController {
     }
 
     /**
-     * Fetches the list of currently available food items from the selected hotel
-     * and populates the TableView in the UI.
+     * Fetches the list of currently available food items from the selected hotel.
      */
     private void loadAvailableFoodItems() {
         String authToken = SessionManager.getAuthToken();
-        if (authToken == null) return; // Error was already shown in the other method
+        if (authToken == null) return;
 
-        // Build the request to get food items for a specific hotel
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/api/food-items/hotel/" + this.hotelId))
                 .header("Authorization", authToken)
                 .GET()
                 .build();
 
-        // Send the request asynchronously
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(response -> {
-                    // Update the UI on the JavaFX Application Thread
                     Platform.runLater(() -> {
                         if (response.statusCode() == 200) {
                             try {
-                                // Convert the JSON array response into a List of FoodItemDto objects
                                 List<FoodItemDto> foodItems = objectMapper.readValue(response.body(), new TypeReference<>() {});
-
-                                // Populate the TableView with the fetched list
                                 foodItemsTableView.setItems(FXCollections.observableArrayList(foodItems));
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -227,14 +228,8 @@ public class HotelDonationViewController {
         return null;
     }
 
-    /**
-     * A utility method to show alerts.
-     */
-
-
     @FXML
     public void handleGoBack(ActionEvent actionEvent) {
-        // Use the reference to the main controller to go back to the hotel list view
         if (mainPortalController != null) {
             mainPortalController.showBrowseHotelsView();
         }

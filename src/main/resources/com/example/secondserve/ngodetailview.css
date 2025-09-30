@@ -1,55 +1,101 @@
 /* ======================================================= */
-/*         STYLES SPECIFICALLY FOR NgoDetailsView.fxml         */
+/*         STYLES FOR NGO DETAILS VIEW                      */
 /* ======================================================= */
 
-/* --- Card for the main NGO details (duplicate for consistency) --- */
-.profile-card {
-    -fx-background-color: #ffffff;
-    -fx-padding: 30px;
-    -fx-background-radius: 8px;
-    -fx-border-radius: 8px;
-    -fx-border-color: #e0e6ec;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
+/* --- Global Styles --- */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #f4f7fa;
 }
 
-.profile-label {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #7f8c8d;
+/* --- Main Content Area --- */
+.main-content {
+    -fx-padding: 30px 40px;
+    -fx-background-color: #f4f7fa;
 }
 
-.profile-value {
-    -fx-font-size: 14px;
+.content-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 600;
     -fx-text-fill: #2c3e50;
 }
 
-/* --- Styles unique to the NGO Details view --- */
-.verification-section {
+.content-subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #5f6368;
+    -fx-font-weight: normal;
+}
+
+/* --- Profile Card --- */
+.profile-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 40px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
     -fx-border-color: #e0e6ec;
-    -fx-border-width: 2px 0 0 0;
-    -fx-padding-top: 20px;
-    -fx-margin-top: 25px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
+}
+
+/* --- Grid Labels --- */
+.profile-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #5f6368;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 0.5px;
+}
+
+.profile-value {
+    -fx-font-size: 15px;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: normal;
+    -fx-wrap-text: true;
+}
+
+/* --- Verification Section --- */
+.verification-section {
+    -fx-border-color: #e8eaed;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 25px 0 0 0;
+}
+
+.verification-section .profile-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #5f6368;
 }
 
 .license-value {
-    -fx-font-family: "Consolas", "Monospaced";
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #34495e;
-    -fx-background-color: #ecf0f1;
-    -fx-padding: 10px;
-    -fx-background-radius: 5px;
-    -fx-margin-top: 5px;
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1a73e8;
+    -fx-background-color: #f1f3f4;
+    -fx-padding: 12px 16px;
+    -fx-background-radius: 6px;
+    -fx-border-color: #e8eaed;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
 }
 
-/* --- Back button specific style if needed, can also be in base --- */
+/* --- Back Button --- */
 .back-button {
-    -fx-background-color: transparent;
-    -fx-border-color: #ced4da;
-    -fx-border-radius: 5px;
-    -fx-text-fill: #495057;
-    -fx-font-weight: bold;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dadce0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #5f6368;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
     -fx-cursor: hand;
-    -fx-padding: 8px 15px;
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 2, 0, 0, 1);
 }
-.back-button:hover { -fx-background-color: #f1f3f5; }
+
+.back-button:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dadce0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 4, 0, 0, 2);
+}

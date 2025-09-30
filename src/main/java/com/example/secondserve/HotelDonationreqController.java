@@ -8,16 +8,19 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,6 +35,7 @@ public class HotelDonationreqController {
 
     // --- FXML UI Components ---
     @FXML private VBox requestsContainer;
+    @FXML private BorderPane mainBorderPane; // Add this to your FXML root
 
     // --- API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -39,8 +43,14 @@ public class HotelDonationreqController {
 
     @FXML
     public void initialize() {
-
         loadPendingRequests();
+    }
+
+    /**
+     * Called by the dashboard controller to pass the main BorderPane reference
+     */
+    public void setMainBorderPane(BorderPane borderPane) {
+        this.mainBorderPane = borderPane;
     }
 
     private void loadPendingRequests() {
@@ -88,7 +98,6 @@ public class HotelDonationreqController {
     }
 
     private void displayRequests(List<FoodRequestDto> requests) {
-
         requestsContainer.getChildren().clear();
         if (requests == null || requests.isEmpty()) {
             Label placeholder = new Label("There are no pending donation requests at this time.");
@@ -102,35 +111,82 @@ public class HotelDonationreqController {
         }
     }
 
+    // In HotelDonationreqController.java
+
     private HBox createRequestCard(FoodRequestDto request) {
+        // Create card with consistent spacing
+        HBox card = new HBox(15);  // Increased spacing slightly
+        card.getStyleClass().add("request-card");
+        card.setAlignment(Pos.CENTER_LEFT);
 
-        VBox textContainer = new VBox(5.0);
+        // 1. NGO Name Label (fixed width for alignment)
         Label ngoNameLabel = new Label(request.getNgoName());
-        ngoNameLabel.getStyleClass().add("ngo-name");
-        String foodDetails = String.format("Requested: %.2f %s of %s", request.getRequestedQuantity(), request.getUnit(), request.getFoodItemName());
-        Label foodItemLabel = new Label(foodDetails);
-        foodItemLabel.getStyleClass().add("food-item");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy 'at' hh:mm a");
-        Label dateLabel = new Label("Received: " + request.getRequestDate().format(formatter));
-        dateLabel.getStyleClass().add("date");
-        textContainer.getChildren().addAll(ngoNameLabel, foodItemLabel, dateLabel);
+        ngoNameLabel.getStyleClass().add("ngo-name-label");
+        ngoNameLabel.setMinWidth(180);
+        ngoNameLabel.setPrefWidth(180);
 
+        // 2. Food Details (fixed width)
+        String foodDetails = String.format("%.2f %s of %s",
+                request.getRequestedQuantity(),
+                request.getUnit(),
+                request.getFoodItemName());
+        Label foodDetailsLabel = new Label(foodDetails);
+        foodDetailsLabel.getStyleClass().add("food-details-label");
+        foodDetailsLabel.setMinWidth(240);
+        foodDetailsLabel.setPrefWidth(240);
+
+        // 3. Request Date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Label dateLabel = new Label("Received: " + request.getRequestDate().format(formatter));
+        dateLabel.getStyleClass().add("date-label");
+
+        // 4. Spacer
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // 5. Buttons
         Button approveButton = new Button("Approve");
         approveButton.getStyleClass().add("approve-button");
+        approveButton.setOnAction(event -> handleApprove(request, card));
+
         Button rejectButton = new Button("Reject");
         rejectButton.getStyleClass().add("reject-button");
-        HBox buttonContainer = new HBox(10.0, approveButton, rejectButton);
-        buttonContainer.getStyleClass().add("button-container");
-
-        HBox card = new HBox(textContainer, spacer, buttonContainer);
-        card.getStyleClass().add("request-card");
-
-        approveButton.setOnAction(event -> handleApprove(request, card));
         rejectButton.setOnAction(event -> handleReject(request, card));
+
+        card.getChildren().addAll(ngoNameLabel, foodDetailsLabel, dateLabel, spacer, approveButton, rejectButton);
+
+        // Click handler for NGO details
+        card.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY &&
+                    !(event.getTarget() instanceof Button)) {
+                showNgoDetails(request.getNgoId());
+            }
+        });
+
         return card;
+    }
+    /**
+     * Navigates to the NGO details view
+     */
+    private void showNgoDetails(Long ngoId) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ngodetailview.fxml"));
+            Parent ngoDetailsView = loader.load();
+
+            // Get the controller and pass the necessary data
+            NgoDetailsController controller = loader.getController();
+            controller.initData(ngoId, mainBorderPane);
+
+            // Replace the current center content with the NGO details view
+            if (mainBorderPane != null) {
+                mainBorderPane.setCenter(ngoDetailsView);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Navigation Error", "Cannot navigate - main pane not set.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Navigation Error", "Could not load NGO details view.");
+        }
     }
 
     private void handleApprove(FoodRequestDto requestDto, HBox cardNode) {
@@ -142,7 +198,6 @@ public class HotelDonationreqController {
     }
 
     private void updateRequestStatus(FoodRequestDto requestDto, String action, HBox cardNode) {
-
         String authToken = SessionManager.getAuthToken();
         if (authToken == null) return;
         HttpRequest request = HttpRequest.newBuilder()
@@ -179,7 +234,6 @@ public class HotelDonationreqController {
 
     @FXML
     public void handleShowRequests(ActionEvent actionEvent) {
-
         loadPendingRequests();
     }
 
@@ -192,13 +246,11 @@ public class HotelDonationreqController {
     }
 
     private Void handleConnectionError(Throwable e) {
-
         Platform.runLater(() -> showAlert(Alert.AlertType.ERROR, "Connection Error", "Could not connect to the server."));
         return null;
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
-
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(title);

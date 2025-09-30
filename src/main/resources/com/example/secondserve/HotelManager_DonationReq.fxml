@@ -5,7 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox styleClass="main-content" stylesheets="@hotelDashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelDonationreqController">
+<VBox styleClass="main-content" stylesheets="@hotelDonationreq.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.secondserve.HotelDonationreqController">
 
    <!-- Page Header -->
    <Label styleClass="content-title" text="Pending Donation Requests">
@@ -20,7 +20,7 @@
    </Label>
 
    <!-- Scrollable Requests Container -->
-   <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+   <ScrollPane fitToWidth="true" styleClass="requests-list-container" VBox.vgrow="ALWAYS">
       <VBox.margin>
          <Insets top="20.0" />
       </VBox.margin>

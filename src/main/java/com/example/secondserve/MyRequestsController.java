@@ -8,12 +8,10 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URI;
@@ -26,7 +24,9 @@ import java.util.List;
 
 public class MyRequestsController {
 
-    // --- FXML UI Components ---
+    @FXML private TableColumn<FoodRequestDto, Void> actionColumn;
+    @FXML private TableColumn<FoodRequestDto, String> quantityColumn;
+
     @FXML private TableView<FoodRequestDto> requestsTableView;
     @FXML private TableColumn<FoodRequestDto, String> hotelNameColumn;
     @FXML private TableColumn<FoodRequestDto, String> foodItemColumn;
@@ -50,25 +50,26 @@ public class MyRequestsController {
     private void setupTableColumns() {
         hotelNameColumn.setCellValueFactory(new PropertyValueFactory<>("hotelName"));
 
-        // Custom cell value factory to combine food name and quantity
-        foodItemColumn.setCellValueFactory(cellData -> {
+        // Food item name only
+        foodItemColumn.setCellValueFactory(new PropertyValueFactory<>("foodItemName"));
+
+        // NEW: Separate quantity column
+        quantityColumn.setCellValueFactory(cellData -> {
             FoodRequestDto request = cellData.getValue();
-            String displayText = String.format("%s (%s %s)",
-                    request.getFoodItemName(),
-                    request.getRequestedQuantity().toString(),
+            String displayText = String.format("%.2f %s",
+                    request.getRequestedQuantity(),
                     request.getUnit());
             return new SimpleStringProperty(displayText);
         });
 
-        // Custom cell value factory to format the date nicely
         dateColumn.setCellValueFactory(cellData -> {
             LocalDateTime dateTime = cellData.getValue().getRequestDate();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
             return new SimpleStringProperty(dateTime.format(formatter));
         });
 
-        // --- Custom Cell Factory for the Status Column ---
-        // This is where the colored labels are created.
+
+
         statusColumn.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(String status, boolean empty) {
@@ -78,17 +79,73 @@ public class MyRequestsController {
                 } else {
                     Label statusLabel = new Label(status);
                     statusLabel.getStyleClass().add("status-label");
-                    // Remove old styles before adding a new one
-                    getStyleClass().removeAll("status-approved", "status-pending", "status-rejected", "status-completed");
-
-                    // Add the correct style class based on the status text
                     statusLabel.getStyleClass().add("status-" + status.toLowerCase());
-
                     setGraphic(statusLabel);
                 }
             }
         });
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("requestStatus"));
+        setupActionColumn();
+    }
+
+    private void setupActionColumn() {
+        Callback<TableColumn<FoodRequestDto, Void>, TableCell<FoodRequestDto, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<FoodRequestDto, Void> call(final TableColumn<FoodRequestDto, Void> param) {
+                return new TableCell<>() {
+                    private final Button completeButton = new Button("Complete");
+                    {
+                        completeButton.getStyleClass().add("complete-button"); // Apply CSS
+                        completeButton.setOnAction(event -> {
+                            FoodRequestDto request = getTableView().getItems().get(getIndex());
+                            handleCompleteDonation(request.getId());
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            FoodRequestDto request = getTableView().getItems().get(getIndex());
+                            // Only show the button if the status is 'APPROVED'
+                            if ("APPROVED".equalsIgnoreCase(request.getRequestStatus())) {
+                                setGraphic(completeButton);
+                                setAlignment(Pos.CENTER);
+                            } else {
+                                setGraphic(null);
+                            }
+                        }
+                    }
+                };
+            }
+        };
+        actionColumn.setCellFactory(cellFactory);
+    }
+
+    private void handleCompleteDonation(Long requestId) {
+        String authToken = SessionManager.getAuthToken();
+        if (authToken == null) {
+            showAlert("Authentication Error", "Could not verify user. Please log in again.");
+            return;
+        }
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:8080/api/food-requests/" + requestId + "/complete"))
+                .header("Authorization", authToken)
+                .PUT(HttpRequest.BodyPublishers.noBody()) // Using PUT to update the resource state
+                .build();
+
+        httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    if (response.statusCode() == 200) {
+                        Platform.runLater(this::loadMyRequests); // Refresh the table on success
+                    } else {
+                        Platform.runLater(() -> showAlert("Update Failed", "Could not complete the donation. Server responded with status: " + response.statusCode()));
+                    }
+                })
+                .exceptionally(this::handleConnectionError);
     }
 
     /**

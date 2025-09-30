@@ -59,8 +59,8 @@
 .nav-button.active {
     -fx-background-color: #ecf0f1;
     -fx-font-weight: bold;
-    -fx-border-color: #16a085; /* Green accent color */
-    -fx-border-width: 0 0 0 4px; /* Left border */
+    -fx-border-color: #16a085;
+    -fx-border-width: 0 0 0 4px;
 }
 
 /* --- Main Content Area --- */
@@ -79,53 +79,167 @@
     -fx-text-fill: #7f8c8d;
 }
 
-.scroll-pane {
+/* --- Requests List Container --- */
+.requests-list-container {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+}
+
+.requests-list-container > .viewport {
+    -fx-background-color: #ffffff;
+}
+
+.requests-list-container .scroll-bar {
     -fx-background-color: transparent;
 }
 
-/* --- Request Card Styles --- */
+.requests-list-container .scroll-bar .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 5px;
+}
+
+/* --- UNIFIED REQUEST CARD STYLES --- */
 .request-card {
     -fx-background-color: #ffffff;
-    -fx-padding: 20px;
-    -fx-background-radius: 8px;
-    -fx-border-color: #e0e6ec;
-    -fx-border-radius: 8px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
+    -fx-padding: 24px 30px;
+    -fx-background-radius: 0;
+    -fx-border-color: #e8eaed;
+    -fx-border-width: 0 0 1 0;
     -fx-alignment: center-left;
-}
-
-.ngo-name {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #34495e;
-}
-
-.food-item, .date {
-    -fx-font-size: 14px;
-    -fx-text-fill: #7f8c8d;
-    -fx-padding-top: 5px;
-}
-
-.approve-button, .reject-button {
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 8px 20px;
-    -fx-background-radius: 5px;
     -fx-cursor: hand;
 }
 
+.request-card:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Remove border from last card */
+.request-card:last-child {
+    -fx-border-width: 0;
+}
+
+/* --- Card Label Styles --- */
+.ngo-name-label, .item-name-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #3c4043;
+}
+
+.food-details-label, .quantity-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #5f6368;
+    -fx-font-weight: normal;
+}
+
+.date-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #5f6368;
+}
+
+/* Hover effect for clickable cards */
+.request-card:hover .ngo-name-label,
+.request-card:hover .item-name-label {
+    -fx-text-fill: #1a73e8;
+}
+
+/* --- Button Container --- */
+.button-container {
+    -fx-alignment: center-right;
+    -fx-spacing: 10;
+}
+
+/* --- Action Buttons --- */
+.approve-button, .reject-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10px 24px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-min-width: 90px;
+}
+
 .approve-button {
-    -fx-background-color: #27ae60; /* Green */
+    -fx-background-color: #27ae60;
     -fx-text-fill: white;
 }
+
 .approve-button:hover {
     -fx-background-color: #229954;
 }
 
 .reject-button {
-    -fx-background-color: #e74c3c; /* Red */
+    -fx-background-color: #e74c3c;
     -fx-text-fill: white;
 }
+
 .reject-button:hover {
     -fx-background-color: #c0392b;
+}
+
+/* --- Placeholder Text --- */
+.placeholder-text {
+    -fx-font-size: 15px;
+    -fx-text-fill: #95a5a6;
+    -fx-padding: 40px 0;
+    -fx-alignment: center;
+}
+
+/* ======================================================= */
+/*         STYLES FOR NGO DETAILS VIEW                     */
+/* ======================================================= */
+
+.profile-card {
+    -fx-background-color: #ffffff;
+    -fx-padding: 30px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e6ec;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 1);
+}
+
+.profile-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+}
+
+.profile-value {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2c3e50;
+}
+
+.verification-section {
+    -fx-border-color: #e0e6ec;
+    -fx-border-width: 2px 0 0 0;
+    -fx-padding-top: 20px;
+    -fx-margin-top: 25px;
+}
+
+.license-value {
+    -fx-font-family: "Consolas", "Monospaced";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+    -fx-background-color: #ecf0f1;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-margin-top: 5px;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5px;
+    -fx-text-fill: #495057;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8px 15px;
+}
+
+.back-button:hover {
+    -fx-background-color: #f1f3f5;
 }
