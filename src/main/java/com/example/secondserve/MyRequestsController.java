@@ -97,7 +97,7 @@ public class MyRequestsController {
     private void loadMyRequests() {
         String authToken = SessionManager.getAuthToken();
         Long ngoId = SessionManager.getSession() != null ? SessionManager.getSession().getUserId() : null;
-
+        System.out.println("Loading requests for NGO ID: " + ngoId);
         if (authToken == null || ngoId == null) {
             showAlert("Authentication Error", "Could not verify user. Please log in again.");
             return;
@@ -116,11 +116,13 @@ public class MyRequestsController {
 
     private void handleServerResponse(HttpResponse<String> response) {
         Platform.runLater(() -> {
+            System.out.println("Response Status: " + response.statusCode());
+            System.out.println("Response Body: " + response.body());
+
             if (response.statusCode() == 200) {
                 try {
-                    // Convert the JSON array from the server into a List of DTOs
                     List<FoodRequestDto> requests = objectMapper.readValue(response.body(), new TypeReference<>() {});
-                    // Populate the table with the fetched data
+                    System.out.println("Parsed " + requests.size() + " requests");
                     requestsTableView.setItems(FXCollections.observableArrayList(requests));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -131,7 +133,6 @@ public class MyRequestsController {
             }
         });
     }
-
     private Void handleConnectionError(Throwable e) {
         Platform.runLater(() -> {
             System.err.println("Connection Error: " + e.getMessage());

@@ -68,11 +68,37 @@ public class NgoPortalController {
         setActiveButton(browseHotelsButton);
         loadHotelsList(); // Refresh the list of hotels
     }
-    @FXML private void showMyRequestsView() { loadView("MyRequestsView.fxml"); setActiveButton(myRequestsButton); }
-    @FXML private void showNgoProfileView() { loadView("NgoProfileView.fxml"); setActiveButton(ngoProfileButton); }
+    @FXML private void showMyRequestsView() { loadView("Myrequest-view.fxml"); setActiveButton(myRequestsButton); }
+    @FXML private void showNgoProfileView() { loadView("ngo-profile.fxml"); setActiveButton(ngoProfileButton); }
 
-    private void loadView(String fxmlFile) { /* ... (Unchanged) ... */ }
-    private void setActiveButton(Button button) { /* ... (Unchanged) ... */ }
+    private void loadView(String fxmlFile) {
+        try {
+            String fullPath = "/com/example/secondserve/" + fxmlFile;
+            System.out.println("Attempting to load: " + fullPath); // Debug line
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fullPath));
+            Parent root = loader.load();
+            mainBorderPane.setCenter(root);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Navigation Error", "Could not load the view: " + fxmlFile);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            showAlert("File Not Found", "The FXML file was not found: " + fxmlFile);
+        }
+    }
+    private void setActiveButton(Button button) {
+        // Remove 'active' class from the previously active button
+        if (activeButton != null) {
+            activeButton.getStyleClass().remove("active");
+        }
+
+        // Add 'active' class to the new button
+        button.getStyleClass().add("active");
+
+        // Store reference to the new active button
+        activeButton = button;
+    }
 
     // --- Data Loading and UI Building (Simplified) ---
 
@@ -178,7 +204,13 @@ public class NgoPortalController {
         return null;
     }
 
-    private void showAlert(String title, String message) { /* ... (Unchanged) ... */ }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     public void handleLogout(ActionEvent actionEvent) {
         // 1. Clear the stored session data

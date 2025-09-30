@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -32,8 +32,7 @@ public class NgoProfileController {
 
     // --- API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private NgoDto currentNgoData; // Store the currently displayed profile data
 
     @FXML
@@ -64,11 +63,16 @@ public class NgoProfileController {
 
     private void handleLoadResponse(HttpResponse<String> response) {
         Platform.runLater(() -> {
+            System.out.println("NGO Profile Response Status: " + response.statusCode());
+            System.out.println("NGO Profile Response Body: " + response.body());
+
             if (response.statusCode() == 200) {
                 try {
                     this.currentNgoData = objectMapper.readValue(response.body(), NgoDto.class);
                     populateViewLabels(currentNgoData);
                 } catch (IOException e) {
+                    System.err.println("Parse error: " + e.getMessage());
+                    e.printStackTrace();
                     showAlert(Alert.AlertType.ERROR, "Data Error", "Failed to parse profile data from the server.");
                 }
             } else {

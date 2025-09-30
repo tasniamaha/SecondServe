@@ -44,35 +44,45 @@ public class HotelDonationreqController {
     }
 
     private void loadPendingRequests() {
-        // ... (this method is correct, no changes needed)
         String authToken = SessionManager.getAuthToken();
         Long hotelId = SessionManager.getSession() != null ? SessionManager.getSession().getUserId() : null;
+        System.out.println("Attempting to load requests for hotelId: " + hotelId);
         if (authToken == null || hotelId == null) {
             showAlert(Alert.AlertType.ERROR, "Authentication Error", "Could not verify user. Please log in again.");
+            requestsContainer.getChildren().clear();
+            Label placeholder = new Label("Could not load requests due to an authentication error.");
+            placeholder.getStyleClass().add("placeholder-text");
+            requestsContainer.getChildren().add(placeholder);
             return;
         }
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/food-requests/hotel/" + hotelId + "/pending"))
+                .uri(URI.create("http://localhost:8080/api/food-requests/hotel/" + hotelId + "?status=PENDING"))
                 .header("Authorization", authToken)
                 .GET()
                 .build();
+
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(this::handleRequestsResponse)
                 .exceptionally(this::handleConnectionError);
     }
 
     private void handleRequestsResponse(HttpResponse<String> response) {
-        // ... (this method is correct, no changes needed)
         Platform.runLater(() -> {
+            System.out.println("Response Status: " + response.statusCode());
+            System.out.println("Response Body: " + response.body());
+
             if (response.statusCode() == 200) {
                 try {
                     List<FoodRequestDto> requests = objectMapper.readValue(response.body(), new TypeReference<>() {});
+                    System.out.println("Number of requests loaded: " + (requests != null ? requests.size() : 0));
                     displayRequests(requests);
                 } catch (IOException e) {
+                    System.err.println("Parse error: " + e.getMessage());
+                    e.printStackTrace();
                     showAlert(Alert.AlertType.ERROR, "Application Error", "Could not parse the list of requests from the server.");
                 }
             } else {
-                showAlert(Alert.AlertType.ERROR, "Server Error", "Could not load donation requests. Status: " + response.statusCode());
+                showAlert(Alert.AlertType.ERROR, "Server Error", "Could not load donation requests. Status: " + response.statusCode() + "\nBody: " + response.body());
             }
         });
     }

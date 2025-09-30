@@ -1,68 +1,64 @@
 package com.example.secondserve.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 public class NgoDto {
-    private String contactPerson; // Maps to "Admin Name" on your form
+    private Long id;
+    private String ngoName;
+    private String contactPerson;
     private String email;
     private String password;
-    private String ngoName;
+    private String phone;
     private String address;
-    private String phone; // Maps to "NGO Contact"
+    private String city;
+    private String state;
+    private String postalCode;
     private String licenseNumber;
+    private LocalDateTime registrationDate;
+    private Boolean isActive;
+    private BigDecimal totalFoodReceived;
 
-    public String getContactPerson() {
-        return contactPerson;
-    }
+    // Getters and Setters for ALL fields
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setContactPerson(String contactPerson) {
-        this.contactPerson = contactPerson;
-    }
+    public String getNgoName() { return ngoName; }
+    public void setNgoName(String ngoName) { this.ngoName = ngoName; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getContactPerson() { return contactPerson; }
+    public void setContactPerson(String contactPerson) { this.contactPerson = contactPerson; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getNgoName() {
-        return ngoName;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-    public void setNgoName(String ngoName) {
-        this.ngoName = ngoName;
-    }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
 
-    public String getAddress() {
-        return address;
-    }
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public String getPostalCode() { return postalCode; }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
 
-    public String getPhone() {
-        return phone;
-    }
+    public String getLicenseNumber() { return licenseNumber; }
+    public void setLicenseNumber(String licenseNumber) { this.licenseNumber = licenseNumber; }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    public LocalDateTime getRegistrationDate() { return registrationDate; }
+    public void setRegistrationDate(LocalDateTime registrationDate) { this.registrationDate = registrationDate; }
 
-    public String getLicenseNumber() {
-        return licenseNumber;
-    }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
-    }
-    // Getters and Setters for all fields...
+    public BigDecimal getTotalFoodReceived() { return totalFoodReceived; }
+    public void setTotalFoodReceived(BigDecimal totalFoodReceived) { this.totalFoodReceived = totalFoodReceived; }
 }
