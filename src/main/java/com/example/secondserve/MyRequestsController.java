@@ -53,7 +53,7 @@ public class MyRequestsController {
         // Food item name only
         foodItemColumn.setCellValueFactory(new PropertyValueFactory<>("foodItemName"));
 
-        // NEW: Separate quantity column
+        
         quantityColumn.setCellValueFactory(cellData -> {
             FoodRequestDto request = cellData.getValue();
             String displayText = String.format("%.2f %s",

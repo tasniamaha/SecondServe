@@ -35,7 +35,7 @@ public class HotelDonationreqController {
 
     // --- FXML UI Components ---
     @FXML private VBox requestsContainer;
-    @FXML private BorderPane mainBorderPane; // Add this to your FXML root
+    @FXML private BorderPane mainBorderPane;
 
     // --- API Communication ---
     private final HttpClient httpClient = HttpClient.newHttpClient();

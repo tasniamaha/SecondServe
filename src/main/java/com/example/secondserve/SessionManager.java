@@ -5,10 +5,12 @@ import com.example.secondserve.dto.AuthResponse;
 public class SessionManager {
     private static AuthResponse currentSession = null;
 
+    @SuppressWarnings("exports")
     public static void createSession(AuthResponse session) {
         currentSession = session;
     }
 
+    @SuppressWarnings("exports")
     public static AuthResponse getSession() {
         return currentSession;
     }

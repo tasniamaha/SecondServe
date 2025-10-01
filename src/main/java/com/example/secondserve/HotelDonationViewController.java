@@ -49,7 +49,7 @@ public class HotelDonationViewController {
     }
 
     private void setupTableColumns() {
-        // FIXED: Changed PropertyValue to PropertyValueFactory
+        
         itemNameColumn.setCellValueFactory(new PropertyValueFactory<>("foodName"));
         conditionColumn.setCellValueFactory(new PropertyValueFactory<>("condition"));
         expiryDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));

@@ -7,14 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL; // <-- IMPORT THIS
+import java.net.URL; 
 import java.util.Objects;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(@SuppressWarnings("exports") Stage stage) throws IOException {
 
-        // ==================== ADD THIS TEST CODE ====================
         System.out.println("--- Checking for resource ---");
         URL resourceUrl = HelloApplication.class.getResource("/assets/SecondServe_logo.png");
         if (resourceUrl == null) {
@@ -23,7 +22,7 @@ public class HelloApplication extends Application {
             System.out.println("SUCCESS: Resource found at: " + resourceUrl);
         }
         System.out.println("---------------------------");
-        // ============================================================
+        
 
 
         // Load the FXML file
@@ -34,5 +33,5 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    // ... main method ...
+    
 }

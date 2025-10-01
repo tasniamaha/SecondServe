@@ -56,12 +56,12 @@ public class HotelDashboardController {
         AuthResponse session = SessionManager.getSession();
         if (session != null) {
 
-            // Use getOrganizationName() instead of getName()
+            
             hotelName.setText(session.getOrganizationName());
         }
         this.dashboardView = mainBorderPane.getCenter();
 
-        // Set the "Main Dashboard" button as active visually.
+        // Set the initial active button to "Main Dashboard"
         setActiveButton(dashboardButton);
 
         // Asynchronously load dynamic data from the server.
@@ -85,6 +85,7 @@ public class HotelDashboardController {
     /**
      * Called when the "Main Dashboard" button is clicked. Restores the initial view.
      */
+    @SuppressWarnings("exports")
     @FXML
     public void handleShowDashboard(ActionEvent actionEvent) {
         mainBorderPane.setCenter(dashboardView);
@@ -95,7 +96,7 @@ public class HotelDashboardController {
      * Called when the "Hotel Profile" button is clicked. Loads the profile view.
      */
     @FXML
-    public void handleShowProfile(ActionEvent actionEvent) {
+    public void handleShowProfile(@SuppressWarnings("exports") ActionEvent actionEvent) {
         loadViewIntoCenter("hotelManager_profile.fxml");
         setActiveButton(profileButton);
     }
